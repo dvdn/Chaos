@@ -25,6 +25,7 @@
 # IRC #navitia on freenode
 # https://groups.google.com/d/forum/navitia
 # www.navitia.io
+from distutils.log import set_verbosity
 
 from flask import request, url_for, g, current_app
 import flask_restful
@@ -44,7 +45,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 import logging
-from utils import make_pager, option_value
+from utils import make_pager, option_value, get_client_code
 
 __all__ = ['Disruptions', 'Index', 'Severity', 'Cause']
 
@@ -125,14 +126,25 @@ class Index(flask_restful.Resource):
 class Severity(flask_restful.Resource):
 
     def get(self, id=None):
+        try:
+            client_code = get_client_code(request)
+            client = models.Client.get_by_code(client_code)
+            if not client:
+                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
+                           error_fields), 400
+
+        except ValidationError, e:
+            logging.debug(str(e))
+            return marshal({'error': {'message': utils.parse_error(e)}},
+                           error_fields), 400
+
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-            response = {'severity': models.Severity.get(id)}
-            return marshal(response, one_severity_fields)
+            return marshal({'severity': models.Severity.get_by_client_id(id, client.id)}, one_severity_fields)
         else:
-            response = {'severities': models.Severity.all(), 'meta': {}}
+            response = {'severities': models.Severity.all(client.id), 'meta': {}}
             return marshal(response, severities_fields)
 
     def post(self):
@@ -140,6 +152,7 @@ class Severity(flask_restful.Resource):
         logging.getLogger(__name__).debug('Post severity: %s', json)
         try:
             validate(json, severity_input_format)
+            client_code = get_client_code(request)
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -148,15 +161,30 @@ class Severity(flask_restful.Resource):
 
         severity = models.Severity()
         mapper.fill_from_json(severity, json, severity_mapping)
+        severity.client = models.Client.get_by_code(client_code)
+        if not severity.client:
+            severity.client = models.Client(client_code)
         db.session.add(severity)
         db.session.commit()
         return marshal({'severity': severity}, one_severity_fields), 201
 
     def put(self, id):
+        try:
+            client_code = get_client_code(request)
+            client = models.Client.get_by_code(client_code)
+            if not client:
+                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
+                           error_fields), 400
+
+        except ValidationError, e:
+            logging.debug(str(e))
+            return marshal({'error': {'message': utils.parse_error(e)}},
+                           error_fields), 400
+
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
-        severity = models.Severity.get(id)
+        severity = models.Severity.get_by_client_id(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT severity: %s', json)
 
@@ -173,10 +201,22 @@ class Severity(flask_restful.Resource):
         return marshal({'severity': severity}, one_severity_fields), 200
 
     def delete(self, id):
+        try:
+            client_code = get_client_code(request)
+            client = models.Client.get_by_code(client_code)
+            if not client:
+                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
+                           error_fields), 404
+
+        except ValidationError, e:
+            logging.debug(str(e))
+            return marshal({'error': {'message': utils.parse_error(e)}},
+                           error_fields), 400
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        severity = models.Severity.get(id)
+
+        severity = models.Severity.get_by_client_id(id, client.id)
         severity.is_visible = False
         db.session.commit()
         return None, 204
