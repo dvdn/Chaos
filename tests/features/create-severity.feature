@@ -1,8 +1,17 @@
 Feature: Create severity
 
+    Scenario: we cannot create severity without client
+        When I post to "/severities" with:
+        """
+        {"wording": "foo"}
+        """
+        Then the status code should be "400"
+
     Scenario: wording is required
+        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities"
         Then the status code should be "400"
+
 
     Scenario: creation of severity
         I fill in header "X-Customer-Id" with "5"

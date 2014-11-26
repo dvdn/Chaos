@@ -25,7 +25,6 @@
 # IRC #navitia on freenode
 # https://groups.google.com/d/forum/navitia
 # www.navitia.io
-from distutils.log import set_verbosity
 
 from flask import request, url_for, g, current_app
 import flask_restful
@@ -128,20 +127,18 @@ class Severity(flask_restful.Resource):
     def get(self, id=None):
         try:
             client_code = get_client_code(request)
-            client = models.Client.get_by_code(client_code)
-            if not client:
-                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
-                           error_fields), 400
-
-        except ValidationError, e:
-            logging.debug(str(e))
+        except exceptions.ClientAbsent, e:
             return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
 
+        client = models.Client.get_by_code(client_code)
+        if not client:
+            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
+                           error_fields), 400
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
-                           error_fields), 400
+                               error_fields), 400
             return marshal({'severity': models.Severity.get_by_client_id(id, client.id)}, one_severity_fields)
         else:
             response = {'severities': models.Severity.all(client.id), 'meta': {}}
@@ -151,8 +148,11 @@ class Severity(flask_restful.Resource):
         json = request.get_json()
         logging.getLogger(__name__).debug('Post severity: %s', json)
         try:
-            validate(json, severity_input_format)
             client_code = get_client_code(request)
+            validate(json, severity_input_format)
+        except exceptions.ClientAbsent, e:
+            return marshal({'error': {'message': utils.parse_error(e)}},
+                           error_fields), 400
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -171,19 +171,19 @@ class Severity(flask_restful.Resource):
     def put(self, id):
         try:
             client_code = get_client_code(request)
-            client = models.Client.get_by_code(client_code)
-            if not client:
-                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
+        except exceptions.ClientAbsent, e:
+            return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
 
-        except ValidationError, e:
-            logging.debug(str(e))
-            return marshal({'error': {'message': utils.parse_error(e)}},
+        client = models.Client.get_by_code(client_code)
+        if not client:
+            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
                            error_fields), 400
 
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
-                    error_fields), 400
+                           error_fields), 400
+
         severity = models.Severity.get_by_client_id(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT severity: %s', json)
@@ -203,19 +203,18 @@ class Severity(flask_restful.Resource):
     def delete(self, id):
         try:
             client_code = get_client_code(request)
-            client = models.Client.get_by_code(client_code)
-            if not client:
-                return marshal({'error': {'message': "X-Customer-Id Not Found"}},
-                           error_fields), 404
-
-        except ValidationError, e:
-            logging.debug(str(e))
+        except exceptions.ClientAbsent, e:
             return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
+
+        client = models.Client.get_by_code(client_code)
+        if not client:
+            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
+                           error_fields), 404
+
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-
         severity = models.Severity.get_by_client_id(id, client.id)
         severity.is_visible = False
         db.session.commit()

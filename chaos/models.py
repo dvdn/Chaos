@@ -62,7 +62,7 @@ PtObjectType = db.Enum('network', 'stop_area', 'line', 'line_section', 'route', 
 class Client(TimestampMixin, db.Model):
     __tablename__ = 'client'
     id = db.Column(UUID, primary_key=True)
-    client_code = db.Column(db.Text, unique=False, nullable=False)
+    client_code = db.Column(db.Text, unique=True, nullable=False)
 
     def __init__(self, code=None):
         self.id = str(uuid.uuid1())
