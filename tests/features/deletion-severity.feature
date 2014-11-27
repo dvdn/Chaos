@@ -65,7 +65,7 @@ Feature: Severity can be deleted
         I fill in header "X-Customer-Id" with "6"
         And I delete "/severities/7ffab232-3d48-4eea-aa2c-22f8680230b6"
         When I get "/severities"
-        Then the status code should be "400"
+        Then the status code should be "404"
 
     Scenario: deletion of one severity
         Given I have the following clients in my database:

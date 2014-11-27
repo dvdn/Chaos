@@ -29,7 +29,7 @@ Feature: update severity
         """
         {"wording": "foo", "color": "blue"}
         """
-        Then the status code should be "400"
+        Then the status code should be "404"
         And the header "Content-Type" should be "application/json"
 
     Scenario: the Severity must exist
