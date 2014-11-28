@@ -112,7 +112,7 @@ class Cause(TimestampMixin, db.Model):
     id = db.Column(UUID, primary_key=True)
     wording = db.Column(db.Text, unique=False, nullable=False)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
-    client_id = db.Column(UUID, db.ForeignKey(Client.id))
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
     client = db.relationship('Client', backref='cause', lazy='joined')
 
     def __init__(self):
@@ -149,7 +149,7 @@ class Tag(TimestampMixin, db.Model):
     id = db.Column(UUID, primary_key=True)
     name = db.Column(db.Text, unique=True, nullable=False)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
-    client_id = db.Column(UUID, db.ForeignKey(Client.id))
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
     client = db.relationship('Client', backref='tag', lazy='joined')
 
     def __init__(self):
@@ -511,7 +511,7 @@ class Channel(TimestampMixin, db.Model):
     max_size = db.Column(db.Integer, unique=False, nullable=True)
     content_type = db.Column(db.Text, unique=False, nullable=True)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
-    client_id = db.Column(UUID, db.ForeignKey(Client.id))
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
     client = db.relationship('Client', backref='channel', lazy='joined')
 
     def __init__(self):

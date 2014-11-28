@@ -26,6 +26,9 @@ def upgrade():
             op.execute("update channel set client_id='{}'".format(row['id']))
             op.execute("update cause set client_id='{}'".format(row['id']))
             op.execute("update tag set client_id='{}'".format(row['id']))
+    op.execute("ALTER TABLE channel ALTER COLUMN client_id SET NOT NULL")
+    op.execute("ALTER TABLE cause ALTER COLUMN client_id SET NOT NULL")
+    op.execute("ALTER TABLE tag ALTER COLUMN client_id SET NOT NULL")
     ### end Alembic commands ###
 
 
