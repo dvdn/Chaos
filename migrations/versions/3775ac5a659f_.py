@@ -22,7 +22,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('id', postgresql.UUID(), nullable=False),
-    sa.Column('client_code', sa.Text(), nullable=False),
+    sa.Column('client_code', sa.Text(), nullable=False, unique=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.add_column('severity', sa.Column('client_id', postgresql.UUID(), sa.ForeignKey('client.id')))
@@ -34,6 +34,8 @@ def upgrade():
     for row in result:
         if row['id']:
             op.execute("update severity set client_id='{}'".format(row['id']))
+    op.execute("ALTER TABLE severity ALTER COLUMN client_id SET NOT NULL")
+
     ### end Alembic commands ###
 
 

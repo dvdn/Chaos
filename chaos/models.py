@@ -82,7 +82,7 @@ class Severity(TimestampMixin, db.Model):
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
     priority = db.Column(db.Integer, unique=False, nullable=True)
     effect = db.Column(SeverityEffect, nullable=True)
-    client_id = db.Column(UUID, db.ForeignKey(Client.id))
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
     client = db.relationship('Client', backref='severity', lazy='joined')
 
     def __init__(self):
