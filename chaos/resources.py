@@ -933,7 +933,7 @@ class Channel(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
-        channel = models.Channel.get(id)
+        channel = models.Channel.get_by_client_id(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT channel: %s', json)
 
@@ -964,7 +964,7 @@ class Channel(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        channel = models.Channel.get(id)
+        channel = models.Channel.get_by_client_id(id, client.id)
         channel.is_visible = False
         db.session.commit()
         return None, 204
