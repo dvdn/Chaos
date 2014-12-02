@@ -41,6 +41,7 @@ from chaos import utils
 import chaos
 from chaos.navitia import Navitia
 from sqlalchemy.exc import IntegrityError
+from functools import wraps
 
 
 import logging
@@ -103,6 +104,24 @@ line_section_mapping = {
     'sens': None
 }
 
+class validate_client(object):
+    def __call__(self, func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                client_code = get_client_code(request)
+            except exceptions.ClientAbsent, e:
+                return marshal({'error': {'message': utils.parse_error(e)}},
+                               error_fields), 400
+
+            client = models.Client.get_by_code(client_code)
+            if not client:
+                return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
+                               error_fields), 404
+            return func(*args, client=client, **kwargs)
+        return wrapper
+
+
 class Index(flask_restful.Resource):
 
     def get(self):
@@ -124,17 +143,8 @@ class Index(flask_restful.Resource):
 
 class Severity(flask_restful.Resource):
 
-    def get(self, id=None):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
+    @validate_client()
+    def get(self, client, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -161,21 +171,13 @@ class Severity(flask_restful.Resource):
 
         severity = models.Severity()
         mapper.fill_from_json(severity, json, severity_mapping)
-        severity.client = models.Client.get_by_code(client_code)
-        if not severity.client:
-            severity.client = models.Client(client_code)
+        severity.client = models.Client.get_or_create(client_code)
         db.session.add(severity)
         db.session.commit()
         return marshal({'severity': severity}, one_severity_fields), 201
 
-    def put(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
+    @validate_client()
+    def put(self, client, id):
         if not client:
             return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
                            error_fields), 404
@@ -200,14 +202,8 @@ class Severity(flask_restful.Resource):
         db.session.commit()
         return marshal({'severity': severity}, one_severity_fields), 200
 
-    def delete(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
+    @validate_client()
+    def delete(self, client, id):
         if not client:
             return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
                            error_fields), 404
@@ -356,17 +352,8 @@ class Disruptions(flask_restful.Resource):
 
 class Cause(flask_restful.Resource):
 
-    def get(self, id=None):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
+    @validate_client()
+    def get(self, client, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -394,25 +381,13 @@ class Cause(flask_restful.Resource):
 
         cause = models.Cause()
         mapper.fill_from_json(cause, json, cause_mapping)
-        cause.client = models.Client.get_by_code(client_code)
-        if not cause.client:
-            cause.client = models.Client(client_code)
+        cause.client = models.Client.get_or_create(client_code)
         db.session.add(cause)
         db.session.commit()
         return marshal({'cause': cause}, one_cause_fields), 201
 
-    def put(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def put(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
@@ -432,18 +407,8 @@ class Cause(flask_restful.Resource):
         db.session.commit()
         return marshal({'cause': cause}, one_cause_fields), 200
 
-    def delete(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def delete(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -455,18 +420,8 @@ class Cause(flask_restful.Resource):
 
 class Tag(flask_restful.Resource):
 
-    def get(self, id=None):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def get(self, client, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -494,9 +449,7 @@ class Tag(flask_restful.Resource):
 
         tag = models.Tag()
         mapper.fill_from_json(tag, json, tag_mapping)
-        tag.client = models.Client.get_by_code(client_code)
-        if not tag.client:
-            tag.client = models.Client(client_code)
+        tag.client = models.Client.get_or_create(client_code)
         db.session.add(tag)
         try:
             db.session.commit()
@@ -506,18 +459,8 @@ class Tag(flask_restful.Resource):
                            error_fields), 400
         return marshal({'tag': tag}, one_tag_fields), 201
 
-    def put(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def put(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
@@ -542,18 +485,8 @@ class Tag(flask_restful.Resource):
                            error_fields), 400
         return marshal({'tag': tag}, one_tag_fields), 200
 
-    def delete(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def delete(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -872,18 +805,8 @@ class Impacts(flask_restful.Resource):
         return None, 204
 
 class Channel(flask_restful.Resource):
-
-    def get(self, id=None):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def get(self,  client, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -911,25 +834,13 @@ class Channel(flask_restful.Resource):
 
         channel = models.Channel()
         mapper.fill_from_json(channel, json, channel_mapping)
-        channel.client = models.Client.get_by_code(client_code)
-        if not channel.client:
-            channel.client = models.Client(client_code)
+        channel.client = models.Client.get_or_create(client_code)
         db.session.add(channel)
         db.session.commit()
         return marshal({'channel': channel}, one_channel_fields), 201
 
-    def put(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def put(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
@@ -949,18 +860,8 @@ class Channel(flask_restful.Resource):
         db.session.commit()
         return marshal({'channel': channel}, one_channel_fields), 200
 
-    def delete(self, id):
-        try:
-            client_code = get_client_code(request)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
-
-        client = models.Client.get_by_code(client_code)
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
+    @validate_client()
+    def delete(self, client, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
