@@ -158,6 +158,7 @@ class Tag(TimestampMixin, db.Model):
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
     client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
     client = db.relationship('Client', backref='tags', lazy='joined')
+    __table_args__ = (db.UniqueConstraint('name', 'client_id', name='tag_name_client_id_key'),)
 
     def __init__(self):
         self.id = str(uuid.uuid1())

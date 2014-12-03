@@ -105,6 +105,9 @@ line_section_mapping = {
 }
 
 class validate_client(object):
+    def __init__(self, create_client=False):
+        self.create_client = create_client
+
     def __call__(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -113,8 +116,10 @@ class validate_client(object):
             except exceptions.ClientAbsent, e:
                 return marshal({'error': {'message': utils.parse_error(e)}},
                                error_fields), 400
-
-            client = models.Client.get_by_code(client_code)
+            if self.create_client:
+                client = models.Client.get_or_create(client_code)
+            else:
+                client = models.Client.get_by_code(client_code)
             if not client:
                 return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
                                error_fields), 404
@@ -154,15 +159,12 @@ class Severity(flask_restful.Resource):
             response = {'severities': models.Severity.all(client.id), 'meta': {}}
             return marshal(response, severities_fields)
 
-    def post(self):
+    @validate_client(True)
+    def post(self, client):
         json = request.get_json()
         logging.getLogger(__name__).debug('Post severity: %s', json)
         try:
-            client_code = get_client_code(request)
             validate(json, severity_input_format)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -171,17 +173,13 @@ class Severity(flask_restful.Resource):
 
         severity = models.Severity()
         mapper.fill_from_json(severity, json, severity_mapping)
-        severity.client = models.Client.get_or_create(client_code)
+        severity.client = client
         db.session.add(severity)
         db.session.commit()
         return marshal({'severity': severity}, one_severity_fields), 201
 
     @validate_client()
     def put(self, client, id):
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -204,10 +202,6 @@ class Severity(flask_restful.Resource):
 
     @validate_client()
     def delete(self, client, id):
-        if not client:
-            return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
-                           error_fields), 404
-
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -364,15 +358,12 @@ class Cause(flask_restful.Resource):
             response = {'causes': models.Cause.all(client.id), 'meta': {}}
             return marshal(response, causes_fields)
 
-    def post(self):
+    @validate_client(True)
+    def post(self, client):
         json = request.get_json()
         logging.getLogger(__name__).debug('Post cause: %s', json)
         try:
-            client_code = get_client_code(request)
             validate(json, cause_input_format)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -381,7 +372,7 @@ class Cause(flask_restful.Resource):
 
         cause = models.Cause()
         mapper.fill_from_json(cause, json, cause_mapping)
-        cause.client = models.Client.get_or_create(client_code)
+        cause.client = client
         db.session.add(cause)
         db.session.commit()
         return marshal({'cause': cause}, one_cause_fields), 201
@@ -432,15 +423,12 @@ class Tag(flask_restful.Resource):
             response = {'tags': models.Tag.all(client.id), 'meta': {}}
             return marshal(response, tags_fields)
 
-    def post(self):
+    @validate_client(True)
+    def post(self, client):
         json = request.get_json()
         logging.getLogger(__name__).debug('Post tag: %s', json)
         try:
-            client_code = get_client_code(request)
             validate(json, tag_input_format)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -449,7 +437,7 @@ class Tag(flask_restful.Resource):
 
         tag = models.Tag()
         mapper.fill_from_json(tag, json, tag_mapping)
-        tag.client = models.Client.get_or_create(client_code)
+        tag.client = client
         db.session.add(tag)
         try:
             db.session.commit()
@@ -806,7 +794,7 @@ class Impacts(flask_restful.Resource):
 
 class Channel(flask_restful.Resource):
     @validate_client()
-    def get(self,  client, id=None):
+    def get(self, client, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -817,15 +805,12 @@ class Channel(flask_restful.Resource):
             response = {'channels': models.Channel.all(client.id), 'meta': {}}
             return marshal(response, channels_fields)
 
-    def post(self):
+    @validate_client(True)
+    def post(self, client):
         json = request.get_json()
         logging.getLogger(__name__).debug('Post channel: %s', json)
         try:
-            client_code = get_client_code(request)
             validate(json, channel_input_format)
-        except exceptions.ClientAbsent, e:
-            return marshal({'error': {'message': utils.parse_error(e)}},
-                           error_fields), 400
         except ValidationError, e:
             logging.debug(str(e))
             #TODO: generate good error messages
@@ -834,7 +819,7 @@ class Channel(flask_restful.Resource):
 
         channel = models.Channel()
         mapper.fill_from_json(channel, json, channel_mapping)
-        channel.client = models.Client.get_or_create(client_code)
+        channel.client = client
         db.session.add(channel)
         db.session.commit()
         return marshal({'channel': channel}, one_channel_fields), 201
