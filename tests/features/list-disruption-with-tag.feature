@@ -2,18 +2,22 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
             | bar       | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | a750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-19T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -28,9 +32,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption filter by tag.name=rer
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -39,10 +47,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-19T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -62,9 +70,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption filter by tag.name=rer or tag.name=meteo
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -73,10 +85,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-16T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -96,9 +108,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption filter by tag.name=rer or tag.name=meteo or tag.name=probleme
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -107,10 +123,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-16T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -131,9 +147,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption not filter by tag
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -142,10 +162,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-19T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -166,9 +186,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption filter by tag.id not exist
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -177,10 +201,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-19T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |
@@ -196,9 +220,13 @@ Feature: Manipulate tags in a Disruption
 
     Scenario: Display tag in a disruption filter by tag.id not valid
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
@@ -207,10 +235,10 @@ Feature: Manipulate tags in a Disruption
             | meteo     | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 3750994c-01fe-11e4-b4fb-080027079ff3 | 2014-04-15T23:52:12    | 2014-04-19T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following tags in my database:
-            | name      |  created_at          | updated_at          | is_visible | id                                   |
-            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 |
-            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 |
-            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 |
+            | name      |  created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | rer       |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 1ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | probleme  |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 2ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+            | meteo     |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 3ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the relation associate_disruption_tag in my database:
             | tag_id                               | disruption_id                        |

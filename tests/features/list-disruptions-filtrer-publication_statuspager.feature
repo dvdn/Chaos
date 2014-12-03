@@ -2,9 +2,13 @@ Feature: list disruptions with filter publication_status
 
     Scenario: Filter current_time=2014-05-02T14:00:00Z&publication_status[]='past'
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             |
@@ -18,9 +22,13 @@ Feature: list disruptions with filter publication_status
 
     Scenario: Filter current_time=2014-05-02T14:00:00Z&publication_status[]='past'&publication_status[]='ongoing'
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             |
@@ -39,9 +47,13 @@ Feature: list disruptions with filter publication_status
 
     Scenario: Filter current_time=2014-05-02T14:00:00Z&publication_status[]='past'&publication_status[]='coming'
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             |
@@ -58,9 +70,13 @@ Feature: list disruptions with filter publication_status
 
     Scenario: Filter current_time=2014-05-02T14:00:00Z&publication_status[]='ongoing'&publication_status[]='coming' with some archived disruptions.
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             |

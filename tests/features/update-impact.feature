@@ -2,17 +2,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with severity and application_periods in json
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     | cause_id                             |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |priority|client_id                            |
@@ -54,17 +54,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with ptobject/application_periods and without severity in json
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_ id                             |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -101,17 +101,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with post 3 application_period and 2 application_periods in database
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -136,17 +136,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with post 2 application_period and 2 application_periods in database
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -171,17 +171,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with post 1 application_period and 2 application_periods in database
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -206,17 +206,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update an impact in a disruption with post 0 application_period and 2 application_periods in database
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -242,17 +242,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update impact with id not valid
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -277,17 +277,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Update impact with id valid and impact not in database
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
@@ -310,17 +310,17 @@ Feature: Update (put) impacts in a Disruption
 
     Scenario: Modify severity of impact
 
+        Given I have the following clients in my database:
+            | client_code   | created_at          | updated_at          | id                                   |
+            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
+
         Given I have the following causes in my database:
-            | wording   | created_at          | updated_at          | is_visible | id                                   |
-            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
+            | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                             |
+            | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date     |cause_id                              |
             | toto      |       | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 6a826e64-028f-11e4-92d0-090027079ff3 | 2014-04-20T23:52:12    | 2014-04-30T23:55:12      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
-
-        Given I have the following clients in my database:
-            | client_code   | created_at          | updated_at          | id                                   |
-            | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
         Given I have the following severities in my database:
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |

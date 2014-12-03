@@ -70,7 +70,14 @@ class Client(TimestampMixin, db.Model):
 
     @classmethod
     def get_by_code(cls, code):
-        return cls.query.filter_by(client_code=code).first()# .first_or_404()
+        return cls.query.filter_by(client_code=code).first()
+
+    @classmethod
+    def get_or_create(cls, code):
+        client = cls.query.filter_by(client_code=code).first()
+        if not client:
+            client = Client(code)
+        return client
 
 class Severity(TimestampMixin, db.Model):
     """
@@ -112,6 +119,8 @@ class Cause(TimestampMixin, db.Model):
     id = db.Column(UUID, primary_key=True)
     wording = db.Column(db.Text, unique=False, nullable=False)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
+    client = db.relationship('Client', backref='causes', lazy='joined')
 
     def __init__(self):
         self.id = str(uuid.uuid1())
@@ -120,12 +129,16 @@ class Cause(TimestampMixin, db.Model):
         return '<Cause %r>' % self.id
 
     @classmethod
-    def all(cls):
-        return cls.query.filter_by(is_visible=True).all()
+    def all(cls, client_id):
+        return cls.query.filter_by(client_id=client_id, is_visible=True).all()
 
     @classmethod
     def get(cls, id):
         return cls.query.filter_by(id=id, is_visible=True).first_or_404()
+
+    @classmethod
+    def get_by_client_id(cls, id, client_id):
+        return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
 
 associate_disruption_tag = db.Table('associate_disruption_tag',
@@ -141,8 +154,11 @@ class Tag(TimestampMixin, db.Model):
     """
     __tablename__ = 'tag'
     id = db.Column(UUID, primary_key=True)
-    name = db.Column(db.Text, unique=True, nullable=False)
+    name = db.Column(db.Text, unique=False, nullable=False)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
+    client = db.relationship('Client', backref='tags', lazy='joined')
+    __table_args__ = (db.UniqueConstraint('name', 'client_id', name='tag_name_client_id_key'),)
 
     def __init__(self):
         self.id = str(uuid.uuid1())
@@ -151,12 +167,16 @@ class Tag(TimestampMixin, db.Model):
         return '<Tag %r>' % self.id
 
     @classmethod
-    def all(cls):
-        return cls.query.filter_by(is_visible=True).all()
+    def all(cls, client_id):
+        return cls.query.filter_by(client_id=client_id,is_visible=True).all()
 
     @classmethod
     def get(cls, id):
         return cls.query.filter_by(id=id, is_visible=True).first_or_404()
+
+    @classmethod
+    def get_by_client_id(cls, id, client_id):
+        return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
 
 class Disruption(TimestampMixin, db.Model):
@@ -499,6 +519,8 @@ class Channel(TimestampMixin, db.Model):
     max_size = db.Column(db.Integer, unique=False, nullable=True)
     content_type = db.Column(db.Text, unique=False, nullable=True)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
+    client = db.relationship('Client', backref='channels', lazy='joined')
 
     def __init__(self):
         self.id = str(uuid.uuid1())
@@ -507,12 +529,16 @@ class Channel(TimestampMixin, db.Model):
         return '<Channel %r>' % self.id
 
     @classmethod
-    def all(cls):
-        return cls.query.filter_by(is_visible=True).all()
+    def all(cls, client_id):
+        return cls.query.filter_by(client_id=client_id, is_visible=True).all()
 
     @classmethod
     def get(cls, id):
         return cls.query.filter_by(id=id, is_visible=True).first_or_404()
+
+    @classmethod
+    def get_by_client_id(cls, id, client_id):
+        return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
 
 class Message(TimestampMixin, db.Model):

@@ -33,7 +33,7 @@ Feature: list severity
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             I fill in header "X-Customer-Id" with "6"
             When I get "/severities"
-            Then the status code should be "400"
+            Then the status code should be "404"
             And the header "Content-Type" should be "application/json"
 
         Scenario: list of two severity
