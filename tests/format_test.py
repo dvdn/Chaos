@@ -151,30 +151,35 @@ def test_impact_without_severity_validation():
 
 
 def test_disruption_validation():
-    json = {"reference": "foo", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
+    json = {"reference": "foo", "contributor": "contrib1", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
     validate(json, formats.disruptions_input_format)
 
 @raises(ValidationError)
 def test_disruption_without_cause_validation():
-    json = {"reference": "foo"}
+    json = {"reference": "foo", "contributor": "contrib1"}
+    validate(json, formats.disruptions_input_format)
+
+@raises(ValidationError)
+def test_disruption_without_contributor_validation():
+    json = {"reference": "foo", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
     validate(json, formats.disruptions_input_format)
 
 @raises(ValidationError)
 def test_disruption_not_cause_id_validation():
-    json = {"reference": "foo", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230$6"}}
+    json = {"reference": "foo", "contributor": "contrib1", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230$6"}}
     validate(json, formats.disruptions_input_format)
 
 def test_disruption_without_localisation_validation():
-    json = {"reference": "foo", "note": "hello", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
+    json = {"reference": "foo", "contributor": "contrib1", "note": "hello", "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
     validate(json, formats.disruptions_input_format)
 
 def test_disruption_with_localisation_validation():
-    json = {"reference": "foo", "note": "hello","localization":[{"id": "stop_area:aaaa", "type":"stop_area"}], "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
+    json = {"reference": "foo", "contributor": "contrib1", "note": "hello","localization":[{"id": "stop_area:aaaa", "type":"stop_area"}], "cause":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
     validate(json, formats.disruptions_input_format)
 
 @raises(ValidationError)
 def test_disruption_with_list_localisation_validation():
-    json = {"reference": "foo", "note": "hello","localization":{"id": "aaaa", "type":"stop_area"}}
+    json = {"reference": "foo", "contributor": "contrib1", "note": "hello","localization":{"id": "aaaa", "type":"stop_area"}}
     validate(json, formats.disruptions_input_format)
 def test_impact_whith_message_validation():
     json = {"severity":{"id": "3d1f42b2-e8df-11e3-8c3e-0008ca8657ea"}, "messages":[{"text":"aaaaaa","channel":{"id": "3d1f42b2-e8df-11e3-8c3e-0008ca86c7ea"}}]}
