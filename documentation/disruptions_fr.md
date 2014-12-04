@@ -103,6 +103,7 @@ Le champs ```tags``` contient une liste de tag de la perturbation.
                         "note": "blablbla",
                         "status": "published",
                         "publication_status": "ongoing",
+                        "contributor": "shortterm.tn",
                         "publication_period" : {
                             "begin":"2014-04-31T17:00:00Z",
                             "end":"2014-05-01T17:00:00Z"
@@ -139,6 +140,7 @@ Le champs ```tags``` contient une liste de tag de la perturbation.
                         "note": null,
                         "status": "published",
                         "publication_status": "coming",
+                        "contributor": "shortterm.tn",
                         "publication_period" : {
                             "begin": "2014-04-31T17:00:00Z",
                             "end": null
@@ -211,6 +213,7 @@ Le champs ```tags``` contient une liste de tag de la perturbation.
                         "note": "retour probable d'ici 5H",
                         "status": "published",
                         "publication_status": "past",
+                        "contributor": "shortterm.tn",
                         "publication_period" : {
                             "begin": "2014-04-31T17:00:00Z",
                             "end": null
@@ -272,6 +275,7 @@ Le content-type de la requete doit etre json et le corps de celle ci doit conten
 Les champs suivant peuvent etre défini:
 
   - reference (obligatoire)
+  - contributor (obligatoire)
   - note
   - publication_period
   - localization
@@ -287,6 +291,7 @@ Lors d'un succés une réponse 201 est retourné, celle ci contient la perturbat
 
             {
                 "reference": "foo",
+                "contributor": "shortterm.tn",
                 "note": null,
                 "publication_period" : {
                     "begin": "2014-04-31T17:00:00Z",
@@ -313,6 +318,7 @@ Lors d'un succés une réponse 201 est retourné, celle ci contient la perturbat
                     "note": null,
                     "status": "published",
                     "publication_status": "ongoing",
+                    "contributor": "shortterm.tn",
                     "publication_period" : {
                         "begin": "2014-04-31T17:00:00Z",
                         "end": null
@@ -412,6 +418,7 @@ Retourne une perturbation (si elle existe):
                     "note": "blablbla",
                     "status": "published",
                     "publication_status": "ongoing",
+                    "contributor": "shortterm.tn",
                     "publication_period" : {
                         "begin": "2014-04-31T17:00:00Z",
                         "end": null
@@ -498,6 +505,7 @@ Le content-type de la requete doit etre json et le corps de celle ci doit conten
 Les champs suivant peuvent etre mis à jour:
 
   - reference
+  - contributor
   - note
   - publication_period
   - localization
@@ -519,6 +527,7 @@ Lors d'un succés une réponse 200 est retourné, celle ci contient la perturbat
 
             {
                 "reference": "foo",
+                "contributor": "shortterm.tn",
                 "note": null,
                 "publication_period" : {
                     "begin": "2014-04-31T17:00:00Z",
@@ -544,6 +553,7 @@ Lors d'un succés une réponse 200 est retourné, celle ci contient la perturbat
                     "note": null,
                     "status": "published",
                     "publication_status": "ongoing",
+                    "contributor": "shortterm.tn",
                     "publication_period" : {
                         "begin": "2014-04-31T17:00:00Z",
                         "end": null
