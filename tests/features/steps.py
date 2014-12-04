@@ -4,7 +4,7 @@ import json
 from chaos import db
 from chaos.models import Disruption, Severity, Cause, Impact, PTobject, Channel, Message, ApplicationPeriods, Tag,\
     associate_impact_pt_object, associate_disruption_tag, LineSection, associate_line_section_route_object,\
-    associate_line_section_via_object, Client
+    associate_line_section_via_object, Client, Contributor
 import chaos
 
 model_classes = {'disruption': Disruption,
@@ -24,7 +24,9 @@ model_classes = {'disruption': Disruption,
                'tags': Tag,
                'line_section' : LineSection,
                'clients': Client,
-               'client': Client
+               'client': Client,
+               'contributors': Contributor,
+               'contributor': Contributor
 }
 
 associations = {'associate_impact_pt_object': associate_impact_pt_object,

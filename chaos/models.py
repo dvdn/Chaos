@@ -79,6 +79,26 @@ class Client(TimestampMixin, db.Model):
             client = Client(code)
         return client
 
+class Contributor(TimestampMixin, db.Model):
+    __tablename__ = 'contributor'
+    id = db.Column(UUID, primary_key=True)
+    contributor_code = db.Column(db.Text, unique=True, nullable=False)
+
+    def __init__(self, code=None):
+        self.id = str(uuid.uuid1())
+        self.contributor_code = code
+
+    @classmethod
+    def get_by_code(cls, code):
+        return cls.query.filter_by(contributor_code=code).first()
+
+    @classmethod
+    def get_or_create(cls, code):
+        contributor = cls.query.filter_by(contributor_code=code).first()
+        if not contributor:
+            contributor = Contributor(code)
+        return contributor
+
 class Severity(TimestampMixin, db.Model):
     """
     represent the severity of an impact
@@ -192,6 +212,10 @@ class Disruption(TimestampMixin, db.Model):
     cause_id = db.Column(UUID, db.ForeignKey(Cause.id))
     cause = db.relationship('Cause', backref='disruption', lazy='joined')
     tags = db.relationship("Tag", secondary=associate_disruption_tag, backref="disruptions")
+    client_id = db.Column(UUID, db.ForeignKey(Client.id), nullable=False)
+    client = db.relationship('Client', backref='disruptions', lazy='joined')
+    contributor_id = db.Column(UUID, db.ForeignKey(Contributor.id), nullable=False)
+    contributor = db.relationship('Contributor', backref='disruptions', lazy='joined')
 
     def __repr__(self):
         return '<Disruption %r>' % self.id
@@ -208,19 +232,19 @@ class Disruption(TimestampMixin, db.Model):
             impact.archive()
 
     @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, status='published').first_or_404()
+    def get(cls, id, contributor_id):
+        return cls.query.filter_by(id=id, contributor_id=contributor_id, status='published').first_or_404()
 
     @classmethod
     @paginate()
-    def all_with_filter(cls, publication_status, tags, uri):
+    def all_with_filter(cls, contributor_id, publication_status, tags, uri):
         availlable_filters = {
             'past': and_(cls.end_publication_date != None, cls.end_publication_date < get_current_time()),
             'ongoing': and_(cls.start_publication_date <= get_current_time(),
                             or_(cls.end_publication_date == None, cls.end_publication_date >= get_current_time())),
             'coming': Disruption.start_publication_date > get_current_time()
         }
-        query = cls.query.filter_by(status='published')
+        query = cls.query.filter_by(contributor_id=contributor_id, status='published')
 
         if tags:
             query = query.filter(cls.tags.any(Tag.id.in_(tags)))
