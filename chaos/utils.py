@@ -37,7 +37,7 @@ from chaos.formats import id_format
 from jsonschema import ValidationError
 import time
 from chaos.populate_pb import populate_pb
-from chaos.exceptions import ClientAbsent
+from chaos.exceptions import HeaderAbsent
 import chaos
 
 def make_pager(resultset, endpoint, **kwargs):
@@ -287,5 +287,9 @@ def send_disruption_to_navitia(disruption):
 def get_client_code(request):
     if 'X-Customer-Id' in request.headers:
         return request.headers['X-Customer-Id']
-    raise ClientAbsent("The parameter X-Customer-Id does not exist in the header")
+    raise HeaderAbsent("The parameter X-Customer-Id does not exist in the header")
 
+def get_contributor_code(request):
+    if 'X-Contributors' in request.headers:
+        return request.headers['X-Contributors']
+    raise HeaderAbsent("The parameter X-Contributors does not exist in the header")

@@ -115,6 +115,7 @@ disruptions_input_format = {
     'properties': {'reference': {'type': 'string', 'maxLength': 250},
                    'note': {'type': 'string'},
                    'publication_period': date_period_format,
+                   'contributor': {'type': 'string'},
                    'cause': {
                        'type': 'object',
                        'properties': {
@@ -138,7 +139,7 @@ disruptions_input_format = {
                        "uniqueItems": True
                    }
     },
-    'required': ['reference', 'cause']
+    'required': ['reference', 'cause', 'contributor']
 }
 
 severity_input_format = {

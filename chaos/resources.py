@@ -45,7 +45,7 @@ from functools import wraps
 
 
 import logging
-from utils import make_pager, option_value, get_client_code
+from utils import make_pager, option_value, get_client_code, get_contributor_code
 
 __all__ = ['Disruptions', 'Index', 'Severity', 'Cause']
 
@@ -113,7 +113,7 @@ class validate_client(object):
         def wrapper(*args, **kwargs):
             try:
                 client_code = get_client_code(request)
-            except exceptions.ClientAbsent, e:
+            except exceptions.HeaderAbsent, e:
                 return marshal({'error': {'message': utils.parse_error(e)}},
                                error_fields), 400
             if self.create_client:
@@ -124,6 +124,23 @@ class validate_client(object):
                 return marshal({'error': {'message': 'X-Customer-Id {} Not Found'.format(client_code)}},
                                error_fields), 404
             return func(*args, client=client, **kwargs)
+        return wrapper
+
+
+class validate_contributor(object):
+    def __call__(self, func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                contributor_code = get_contributor_code(request)
+            except exceptions.HeaderAbsent, e:
+                return marshal({'error': {'message': utils.parse_error(e)}},
+                               error_fields), 400
+            contributor = models.Contributor.get_by_code(contributor_code)
+            if not contributor:
+                return marshal({'error': {'message': 'X-Contributors {} Not Found'.format(contributor_code)}},
+                               error_fields), 404
+            return func(*args, contributor=contributor, **kwargs)
         return wrapper
 
 
@@ -232,12 +249,13 @@ class Disruptions(flask_restful.Resource):
         parser_get.add_argument("current_time", type=utils.get_datetime)
         parser_get.add_argument("uri", type=str)
 
-    def get(self, id=None):
+    @validate_contributor()
+    def get(self, contributor, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                                error_fields), 400
-            return marshal({'disruption': models.Disruption.get(id)},
+            return marshal({'disruption': models.Disruption.get(id, contributor.id)},
                            one_disruption_fields)
         else:
             args = self.parsers['get'].parse_args()
@@ -254,12 +272,14 @@ class Disruptions(flask_restful.Resource):
             g.current_time = args['current_time']
             result = models.Disruption.all_with_filter(page_index=page_index,
                                                        items_per_page=items_per_page,
+                                                       contributor_id=contributor.id,
                                                        publication_status=publication_status,
                                                        tags=tags, uri=uri)
             response = {'disruptions': result.items, 'meta': make_pager(result, 'disruption')}
             return marshal(response, disruptions_fields)
 
-    def post(self):
+    @validate_client(True)
+    def post(self, client):
         json = request.get_json()
         logging.getLogger(__name__).debug('POST disruption: %s', json)
         try:
@@ -271,6 +291,11 @@ class Disruptions(flask_restful.Resource):
                            error_fields), 400
         disruption = models.Disruption()
         mapper.fill_from_json(disruption, json, disruption_mapping)
+
+        #Use contributor_code present in the json to get contributor_id
+        if 'contributor' in json:
+            disruption.contributor = models.Contributor.get_or_create(json['contributor'])
+        disruption.client = client
 
         #Add localization present in Json
         if 'localization' in json and json['localization']:
@@ -289,11 +314,12 @@ class Disruptions(flask_restful.Resource):
         chaos.utils.send_disruption_to_navitia(disruption)
         return marshal({'disruption': disruption}, one_disruption_fields), 201
 
-    def put(self, id):
+    @validate_contributor()
+    def put(self, contributor, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        disruption = models.Disruption.get(id)
+        disruption = models.Disruption.get(id, contributor.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT disruption: %s', json)
 
@@ -306,6 +332,10 @@ class Disruptions(flask_restful.Resource):
                            error_fields), 400
 
         mapper.fill_from_json(disruption, json, disruption_mapping)
+
+        #Use contributor_code present in the json to get contributor_id
+        if 'contributor' in json:
+            disruption.contributor = models.Contributor.get_or_create(json['contributor'])
 
         #Add localization present in Json
         if 'localization' in json and json['localization']:
@@ -333,11 +363,12 @@ class Disruptions(flask_restful.Resource):
         chaos.utils.send_disruption_to_navitia(disruption)
         return marshal({'disruption': disruption}, one_disruption_fields), 200
 
-    def delete(self, id):
+    @validate_contributor()
+    def delete(self, contributor, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        disruption = models.Disruption.get(id)
+        disruption = models.Disruption.get(id, contributor.id)
         disruption.archive()
         db.session.commit()
         chaos.utils.send_disruption_to_navitia(disruption)
@@ -665,7 +696,8 @@ class Impacts(flask_restful.Resource):
             response = {'impacts': result.items, 'meta': make_pager(result, 'impact', disruption_id=disruption_id)}
             return marshal(response, impacts_fields)
 
-    def post(self, disruption_id):
+    @validate_contributor()
+    def post(self, contributor, disruption_id):
 
         if not id_format.match(disruption_id):
             return marshal({'error': {'message': "id invalid"}},
@@ -714,10 +746,11 @@ class Impacts(flask_restful.Resource):
         self.manage_application_periods(impact, json)
         self.manage_message(impact, json)
         db.session.commit()
-        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id))
+        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id, contributor.id))
         return marshal({'impact': impact}, one_impact_fields), 201
 
-    def put(self, disruption_id, id):
+    @validate_contributor()
+    def put(self, contributor, disruption_id, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -779,17 +812,18 @@ class Impacts(flask_restful.Resource):
         self.manage_application_periods(impact, json)
         self.manage_message(impact, json)
         db.session.commit()
-        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id))
+        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id, contributor.id))
         return marshal({'impact': impact}, one_impact_fields), 200
 
-    def delete(self, disruption_id, id):
+    @validate_contributor()
+    def delete(self, contributor, disruption_id, id):
         if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                                error_fields), 400
         impact = models.Impact.get(id)
         impact.archive()
         db.session.commit()
-        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id))
+        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id, contributor.id))
         return None, 204
 
 class Channel(flask_restful.Resource):
