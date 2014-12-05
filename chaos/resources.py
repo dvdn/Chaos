@@ -467,10 +467,9 @@ class Tag(flask_restful.Resource):
                            error_fields), 400
 
         #if an archived tag exists with same name use the same instead of creating a new one.
-        if 'name' in json:
-            old_tag = models.Tag.get_by_name(json['name'], client.id)
-        if old_tag:
-            tag = old_tag
+        archived_tag = models.Tag.get_archived_by_name(json['name'], client.id)
+        if archived_tag:
+            tag = archived_tag
             tag.client = client
             tag.is_visible = True
         else:

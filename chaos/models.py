@@ -199,7 +199,7 @@ class Tag(TimestampMixin, db.Model):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
     @classmethod
-    def get_by_name(cls, name, client_id):
+    def get_archived_by_name(cls, name, client_id):
         return cls.query.filter_by(name=name, client_id=client_id, is_visible=False).first()
 
 class Disruption(TimestampMixin, db.Model):
