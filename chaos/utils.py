@@ -293,3 +293,14 @@ def get_contributor_code(request):
     if 'X-Contributors' in request.headers:
         return request.headers['X-Contributors']
     raise HeaderAbsent("The parameter X-Contributors does not exist in the header")
+
+def get_token(request):
+    if 'Authorization' in request.headers:
+        return request.headers['Authorization']
+    raise HeaderAbsent("The parameter Authorization does not exist in the header")
+
+def get_coverage(request):
+    if 'X-Coverage' in request.headers:
+        return request.headers['X-Coverage']
+    raise HeaderAbsent("The parameter X-Coverage does not exist in the header")
+
