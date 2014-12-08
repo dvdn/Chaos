@@ -45,7 +45,8 @@ from functools import wraps
 
 
 import logging
-from utils import make_pager, option_value, get_client_code, get_contributor_code
+from utils import make_pager, option_value, get_client_code, get_contributor_code,\
+    get_token, get_coverage
 
 __all__ = ['Disruptions', 'Index', 'Severity', 'Cause']
 
@@ -144,6 +145,24 @@ class validate_contributor(object):
         return wrapper
 
 
+class validate_navitia(object):
+    def __call__(self, func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                coverage = get_coverage(request)
+                token = get_token(request)
+            except exceptions.HeaderAbsent, e:
+                return marshal({'error': {'message': utils.parse_error(e)}},
+                               error_fields), 400
+            if 'navitia' in g and g.navitia:
+                g.navitia.coverage = coverage
+                g.navitia.token = token
+
+            return func(*args, **kwargs)
+        return wrapper
+
+
 class Index(flask_restful.Resource):
 
     def get(self):
@@ -171,7 +190,7 @@ class Severity(flask_restful.Resource):
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                                error_fields), 400
-            return marshal({'severity': models.Severity.get_by_client_id(id, client.id)}, one_severity_fields)
+            return marshal({'severity': models.Severity.get(id, client.id)}, one_severity_fields)
         else:
             response = {'severities': models.Severity.all(client.id), 'meta': {}}
             return marshal(response, severities_fields)
@@ -201,7 +220,7 @@ class Severity(flask_restful.Resource):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
 
-        severity = models.Severity.get_by_client_id(id, client.id)
+        severity = models.Severity.get(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT severity: %s', json)
 
@@ -222,7 +241,7 @@ class Severity(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        severity = models.Severity.get_by_client_id(id, client.id)
+        severity = models.Severity.get(id, client.id)
         severity.is_visible = False
         db.session.commit()
         return None, 204
@@ -307,15 +326,16 @@ class Disruptions(flask_restful.Resource):
         #Add all tags present in Json
         if 'tags' in json:
             for json_tag in json['tags']:
-                    tag = models.Tag.get(json_tag['id'])
+                    tag = models.Tag.get(json_tag['id'], client.id)
                     disruption.tags.append(tag)
 
         db.session.commit()
         chaos.utils.send_disruption_to_navitia(disruption)
         return marshal({'disruption': disruption}, one_disruption_fields), 201
 
+    @validate_client()
     @validate_contributor()
-    def put(self, contributor, id):
+    def put(self, client, contributor, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -350,7 +370,7 @@ class Disruptions(flask_restful.Resource):
             tags_json = dict((tag["id"], tag) for tag in json['tags'])
             for tag_json in json['tags']:
                 if tag_json["id"] not in tags_db:
-                    tag = models.Tag.get(tag_json['id'])
+                    tag = models.Tag.get(tag_json['id'], client.id)
                     disruption.tags.append(tag)
                     tags_db[tag_json['id']] = tag
 
@@ -383,7 +403,7 @@ class Cause(flask_restful.Resource):
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-            response = {'cause': models.Cause.get_by_client_id(id, client.id)}
+            response = {'cause': models.Cause.get(id, client.id)}
             return marshal(response, one_cause_fields)
         else:
             response = {'causes': models.Cause.all(client.id), 'meta': {}}
@@ -413,7 +433,7 @@ class Cause(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
-        cause = models.Cause.get_by_client_id(id, client.id)
+        cause = models.Cause.get(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT cause: %s', json)
 
@@ -434,7 +454,7 @@ class Cause(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        cause = models.Cause.get_by_client_id(id, client.id)
+        cause = models.Cause.get(id, client.id)
         cause.is_visible = False
         db.session.commit()
         return None, 204
@@ -448,7 +468,7 @@ class Tag(flask_restful.Resource):
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-            response = {'tag': models.Tag.get_by_client_id(id, client.id)}
+            response = {'tag': models.Tag.get(id, client.id)}
             return marshal(response, one_tag_fields)
         else:
             response = {'tags': models.Tag.all(client.id), 'meta': {}}
@@ -491,7 +511,7 @@ class Tag(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
-        tag = models.Tag.get_by_client_id(id, client.id)
+        tag = models.Tag.get(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT tag: %s', json)
 
@@ -517,7 +537,7 @@ class Tag(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        tag = models.Tag.get_by_client_id(id, client.id)
+        tag = models.Tag.get(id, client.id)
         tag.is_visible = False
         db.session.commit()
         return None, 204
@@ -539,7 +559,9 @@ class ImpactsByObject(flask_restful.Resource):
                                current_app.config['NAVITIA_COVERAGE'],
                                current_app.config['NAVITIA_TOKEN'])
 
-    def get(self):
+    @validate_contributor()
+    @validate_navitia()
+    def get(self, contributor):
         args = self.parsers['get'].parse_args()
         pt_object_type = args['pt_object_type']
         start_date = args['start_date']
@@ -549,7 +571,7 @@ class ImpactsByObject(flask_restful.Resource):
         if not pt_object_type and not uris:
                 return marshal({'error': {'message': "object type or uri object invalid"}},
                                error_fields), 400
-        impacts = models.Impact.all_with_filter(start_date, end_date, pt_object_type, uris)
+        impacts = models.Impact.all_with_filter(start_date, end_date, pt_object_type, uris, contributor.id)
         result = utils.group_impacts_by_pt_object(impacts, pt_object_type, uris, self.navitia.get_pt_object)
         return marshal({'objects': result}, impacts_by_object_fields)
 
@@ -678,12 +700,14 @@ class Impacts(flask_restful.Resource):
                 mapper.fill_from_json(application_period, app_period, application_period_mapping)
                 impact.insert_app_period(application_period)
 
-    def get(self, disruption_id, id=None):
+    @validate_contributor()
+    @validate_navitia()
+    def get(self, contributor, disruption_id, id=None):
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-            response = models.Impact.get(id)
+            response = models.Impact.get(id, contributor.id)
             return marshal({'impact': response},
                            one_impact_fields)
         else:
@@ -700,12 +724,15 @@ class Impacts(flask_restful.Resource):
 
             result = models.Impact.all(page_index=page_index,
                                        items_per_page=items_per_page,
-                                       disruption_id=disruption_id)
+                                       disruption_id=disruption_id,
+                                       contributor_id=contributor.id)
             response = {'impacts': result.items, 'meta': make_pager(result, 'impact', disruption_id=disruption_id)}
             return marshal(response, impacts_fields)
 
+    @validate_client()
     @validate_contributor()
-    def post(self, contributor, disruption_id):
+    @validate_navitia()
+    def post(self, client, contributor, disruption_id):
 
         if not id_format.match(disruption_id):
             return marshal({'error': {'message': "id invalid"}},
@@ -722,8 +749,9 @@ class Impacts(flask_restful.Resource):
             return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
 
+        disruption = models.Disruption.get(disruption_id, contributor.id)
         impact = models.Impact()
-        impact.severity = models.Severity.get(json['severity']['id'])
+        impact.severity = models.Severity.get(json['severity']['id'], client.id)
 
         impact.disruption_id = disruption_id
         db.session.add(impact)
@@ -754,11 +782,13 @@ class Impacts(flask_restful.Resource):
         self.manage_application_periods(impact, json)
         self.manage_message(impact, json)
         db.session.commit()
-        chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id, contributor.id))
+        chaos.utils.send_disruption_to_navitia(disruption)
         return marshal({'impact': impact}, one_impact_fields), 201
 
+    @validate_client()
     @validate_contributor()
-    def put(self, contributor, disruption_id, id):
+    @validate_navitia()
+    def put(self, client, contributor, disruption_id, id):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -773,7 +803,7 @@ class Impacts(flask_restful.Resource):
             return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
 
-        impact = models.Impact.get(id)
+        impact = models.Impact.get(id, contributor.id)
 
         #Fetch all the objects (except line_section) of impact in the database and insert code(uri) in the dictionary "pt_object_db".
         #For each object (except line_section) present in json but absent in pt_object_db, we add in database.
@@ -815,7 +845,7 @@ class Impacts(flask_restful.Resource):
         severity_json = json['severity']
         if severity_json['id'] != impact.severity_id:
             impact.severity_id = severity_json['id']
-            impact.severity = models.Severity.get(impact.severity_id)
+            impact.severity = models.Severity.get(impact.severity_id, client.id)
 
         self.manage_application_periods(impact, json)
         self.manage_message(impact, json)
@@ -828,7 +858,7 @@ class Impacts(flask_restful.Resource):
         if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                                error_fields), 400
-        impact = models.Impact.get(id)
+        impact = models.Impact.get(id, contributor.id)
         impact.archive()
         db.session.commit()
         chaos.utils.send_disruption_to_navitia(models.Disruption.get(disruption_id, contributor.id))
@@ -841,7 +871,7 @@ class Channel(flask_restful.Resource):
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
                                error_fields), 400
-            response = {'channel': models.Channel.get(id)}
+            response = {'channel': models.Channel.get(id, client.id)}
             return marshal(response, one_channel_fields)
         else:
             response = {'channels': models.Channel.all(client.id), 'meta': {}}
@@ -871,7 +901,7 @@ class Channel(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                     error_fields), 400
-        channel = models.Channel.get_by_client_id(id, client.id)
+        channel = models.Channel.get(id, client.id)
         json = request.get_json()
         logging.getLogger(__name__).debug('PUT channel: %s', json)
 
@@ -892,7 +922,7 @@ class Channel(flask_restful.Resource):
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
-        channel = models.Channel.get_by_client_id(id, client.id)
+        channel = models.Channel.get(id, client.id)
         channel.is_visible = False
         db.session.commit()
         return None, 204

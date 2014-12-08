@@ -29,6 +29,8 @@ Feature: Delete impacts in a Disruption
 
 
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/disruptions/6a826e64-028f-11e4-92d0-090027079ff3/impacts"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"

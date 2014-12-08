@@ -123,12 +123,8 @@ class Severity(TimestampMixin, db.Model):
         return cls.query.filter_by(client_id=client_id, is_visible=True).order_by(cls.priority).all()
 
     @classmethod
-    def get_by_client_id(cls, id, client_id):
+    def get(cls, id, client_id):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
-
-    @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, is_visible=True).first_or_404()
 
 
 
@@ -153,12 +149,9 @@ class Cause(TimestampMixin, db.Model):
         return cls.query.filter_by(client_id=client_id, is_visible=True).all()
 
     @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, is_visible=True).first_or_404()
-
-    @classmethod
-    def get_by_client_id(cls, id, client_id):
+    def get(cls, id, client_id):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
+
 
 
 associate_disruption_tag = db.Table('associate_disruption_tag',
@@ -191,16 +184,13 @@ class Tag(TimestampMixin, db.Model):
         return cls.query.filter_by(client_id=client_id,is_visible=True).all()
 
     @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, is_visible=True).first_or_404()
-
-    @classmethod
-    def get_by_client_id(cls, id, client_id):
+    def get(cls, id, client_id):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
     @classmethod
     def get_archived_by_name(cls, name, client_id):
         return cls.query.filter_by(name=name, client_id=client_id, is_visible=False).first()
+
 
 class Disruption(TimestampMixin, db.Model):
     __tablename__ = 'disruption'
@@ -405,23 +395,30 @@ class Impact(TimestampMixin, db.Model):
 
 
     @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, status='published').first_or_404()
+    def get(cls, id, contributor_id):
+        query = cls.query.filter_by(id=id, status='published')
+        query = query.join(Disruption)
+        query = query.filter(Disruption.contributor_id == contributor_id)
+        return query.first_or_404()
 
     @classmethod
     @paginate()
-    def all(cls, disruption_id):
+    def all(cls, disruption_id, contributor_id):
         alias = aliased(Severity)
         query = cls.query.filter_by(status='published')
         query = query.filter(and_(cls.disruption_id == disruption_id))
+        query = query.join(Disruption)
+        query = query.filter(Disruption.contributor_id == contributor_id)
         return query.join(alias, Impact.severity).order_by(alias.priority)
 
     @classmethod
-    def all_with_filter(cls, start_date, end_date, pt_object_type, uris):
+    def all_with_filter(cls, start_date, end_date, pt_object_type, uris, contributor_id):
         pt_object_alias = aliased(PTobject)
         query = cls.query.filter(cls.status == 'published')
+        query = query.join(Disruption)
         query = query.join(ApplicationPeriods)
         query = query.join(pt_object_alias, cls.objects)
+        query = query.filter(Disruption.contributor_id == contributor_id)
 
         query = query.filter(
             and_(
@@ -560,11 +557,7 @@ class Channel(TimestampMixin, db.Model):
         return cls.query.filter_by(client_id=client_id, is_visible=True).all()
 
     @classmethod
-    def get(cls, id):
-        return cls.query.filter_by(id=id, is_visible=True).first_or_404()
-
-    @classmethod
-    def get_by_client_id(cls, id, client_id):
+    def get(cls, id, client_id):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
 

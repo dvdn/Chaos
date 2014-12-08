@@ -28,7 +28,7 @@
 # www.navitia.io
 
 from flask_restful import fields, url_for
-from flask import current_app
+from flask import current_app, g
 from  utils import make_pager
 from chaos.navitia import Navitia
 
@@ -62,9 +62,13 @@ class FieldObjectName(fields.Raw):
     def output(self, key, obj):
         if obj.type == 'line_section':
             return None
-        navitia = Navitia(current_app.config['NAVITIA_URL'],
-                          current_app.config['NAVITIA_COVERAGE'],
-                          current_app.config['NAVITIA_TOKEN'])
+        if 'navitia' in g and g.navitia:
+            navitia = g.navitia
+        else:
+            navitia = Navitia(current_app.config['NAVITIA_URL'],
+                              current_app.config['NAVITIA_COVERAGE'],
+                              current_app.config['NAVITIA_TOKEN'])
+
         response = navitia.get_pt_object(obj.uri, obj.type)
         if response and 'name' in response:
             return response['name']
@@ -76,9 +80,12 @@ class FieldLocalization(fields.Raw):
         retVal = None
 
         if obj.localization_id:
-            navitia = Navitia(current_app.config['NAVITIA_URL'],
-                              current_app.config['NAVITIA_COVERAGE'],
-                              current_app.config['NAVITIA_TOKEN'])
+            if 'navitia' in g and g.navitia:
+                navitia = g.navitia
+            else:
+                navitia = Navitia(current_app.config['NAVITIA_URL'],
+                                  current_app.config['NAVITIA_COVERAGE'],
+                                  current_app.config['NAVITIA_TOKEN'])
 
             response = navitia.get_pt_object(obj.localization_id, 'stop_area')
             if response and 'name' in response:
