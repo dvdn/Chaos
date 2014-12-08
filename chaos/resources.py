@@ -466,10 +466,18 @@ class Tag(flask_restful.Resource):
             return marshal({'error': {'message': utils.parse_error(e)}},
                            error_fields), 400
 
-        tag = models.Tag()
-        mapper.fill_from_json(tag, json, tag_mapping)
-        tag.client = client
-        db.session.add(tag)
+        #if an archived tag exists with same name use the same instead of creating a new one.
+        archived_tag = models.Tag.get_archived_by_name(json['name'], client.id)
+        if archived_tag:
+            tag = archived_tag
+            tag.client = client
+            tag.is_visible = True
+        else:
+            tag = models.Tag()
+            mapper.fill_from_json(tag, json, tag_mapping)
+            tag.client = client
+            db.session.add(tag)
+
         try:
             db.session.commit()
         except IntegrityError, e:
