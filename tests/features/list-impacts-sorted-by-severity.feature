@@ -24,6 +24,10 @@ Feature: list impacts sorted by severity.priority
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab230-3d48-4eea-aa2c-22f8680230b6 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eec-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab232-3d48-4eea-aa2c-22f8680230b7 |
+
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6/impacts"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"

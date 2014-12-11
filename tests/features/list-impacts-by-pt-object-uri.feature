@@ -56,6 +56,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?uri[]=network:JDR:1&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -118,6 +121,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?uri[]=network:JDR:1&uri[]=network:JDR:2&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -181,6 +187,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?pt_object_type=network&uri[]=network:JDR:1&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -243,6 +252,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?pt_object_type=network&uri[]=network:JDR:1&uri[]=network:JDR:2&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -306,6 +318,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?uri[]=network:JDR:1&uri[]=stop_area:JDR:SA:CHVIN&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -373,6 +388,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I get "/impacts?start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"
@@ -433,6 +451,9 @@ Feature: list impacts by ptobject and/or uri(s)
             | created_at          | updated_at          |id                                   | impact_id                            |start_date                           |end_date            |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         #Fetch impact by uri of object in start_point of line_section
         When I get "/impacts?uri[]=stop_area:JDR:SA:BASTI&start_date=2013-12-02T23:52:12Z&end_date=2014-10-21T23:52:12Z"
         Then the status code should be "200"
@@ -531,6 +552,10 @@ Feature: list impacts by ptobject and/or uri(s)
             | created_at          | updated_at          |id                                   | impact_id                            |start_date                           |end_date            |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |8ffab232-3d47-4eea-aa2c-22f8680230b1 | 8ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
+
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         #Fetch impact by uri of object in start_point of line_section
         When I get "/impacts?uri[]=stop_area:JDR:SA:NATIO&start_date=2013-12-02T23:52:12Z&end_date=2014-10-21T23:52:12Z"
         Then the status code should be "200"

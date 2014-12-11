@@ -22,7 +22,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:JDR:2AAA","type": "network"}]}
@@ -53,7 +56,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:JDR:2","type": "network"}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -114,7 +120,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "stop_area:JDR:SA:PTVIN","type": "stop_area"}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -149,7 +158,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "line:JDR:M1","type": "line"}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -187,7 +199,10 @@ Feature: Manipulate impacts in a Disruption
             | created_at          | updated_at          | status    | id                                   | disruption_id                        |severity_id                          |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d47-4eea-aa2c-22f8680230b6 | 2ffab230-3d48-4eea-aa2c-22f8680230b6 |3ffab232-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "3ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:JDR:2","type": "network"}]}
@@ -232,7 +247,10 @@ Feature: Manipulate impacts in a Disruption
             | pt_object_id                               | impact_id                            |
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "3ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:JDR:2","type": "network"}, {"id": "network:JDR:1","type": "network"}]}
@@ -276,7 +294,10 @@ Feature: Manipulate impacts in a Disruption
             | pt_object_id                               | impact_id                            |
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "3ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:JDR:2","type": "network"}]}
@@ -310,7 +331,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:M1", "type":"line_section","line_section": {"line":{"id":"line:JDR:M1","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:PTVIN", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, "sens":0 }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -346,7 +370,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:M1", "type":"line"},{"id":"line:JDR:M1", "type":"line_section","line_section": {"line":{"id":"line:JDR:M1","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:PTVIN", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, "sens":0 }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -384,7 +411,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:M1", "type":"line_section","line_section": {"line":{"id":"line:JDR:M1","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:PTVIN", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, "sens":0, "routes":[{"type":"route", "id":"route:JDR:M14"}, {"type":"route", "id":"route:JDR:M1"}] }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -424,7 +454,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:M1", "type":"line"},{"id":"line:JDR:M1", "type":"line_section","line_section": {"line":{"id":"line:JDR:M1","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:PTVIN", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, "sens":0, "routes":[{"type":"route", "id":"route:JDR:M14"}, {"type":"route", "id":"route:JDR:M1"}] }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -466,7 +499,10 @@ Feature: Manipulate impacts in a Disruption
                 | wording   | color   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
                 | good news | #654321 | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I post to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3/impacts" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:M1", "type":"line"},{"id":"line:JDR:M1", "type":"line_section","line_section": {"line":{"id":"line:JDR:M1","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:PTVIN", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, "sens":0, "routes":[{"type":"route", "id":"route:JDR:M14"}, {"type":"route", "id":"route:JDR:M1"}], "via":[{"id":"stop_area:JDR:SA:BERAU", "type":"stop_area"}, {"id":"stop_area:JDR:SA:CHVIN", "type":"stop_area"}] }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"},{"begin": "2014-04-29T16:52:00Z","end": "2014-05-22T02:15:00Z"}]}
@@ -548,7 +584,10 @@ Feature: Manipulate impacts in a Disruption
             | created_at          | updated_at          |id                                   | impact_id                            |start_date                           |end_date            |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:TAD:CanalTP","type": "network"}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"}]}
@@ -621,7 +660,10 @@ Feature: Manipulate impacts in a Disruption
             | created_at          | updated_at          |id                                   | impact_id                            |start_date                           |end_date            |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id": "network:TAD:CanalTP","type": "network"}, {"id":"line:JDR:TT", "type":"line_section","line_section": {"line":{"id":"line:JDR:TT","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:BASTI", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:CHVIN", "type":"stop_area"}, "sens":0, "routes":[{"type":"route", "id":"route:JDR:M14"}, {"type":"route", "id":"route:JDR:M1_R"}], "via":[{"id":"stop_area:JDR:SA:NATIO", "type":"stop_area"}, {"id":"stop_area:JDR:SA:REUIL", "type":"stop_area"}] }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"}]}
@@ -706,7 +748,10 @@ Feature: Manipulate impacts in a Disruption
             | created_at          | updated_at          |id                                   | impact_id                            |start_date                           |end_date            |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
+        I fill in header "X-Customer-Id" with "5"
         I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "e74598a0-239b-4d9f-92e3-18cfc120672b"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6" with:
         """
         {"severity": {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}, "objects": [{"id":"line:JDR:TT", "type":"line_section","line_section": {"line":{"id":"line:JDR:TT","type":"line"}, "start_point":{"id":"stop_area:JDR:SA:BASTI", "type":"stop_area"}, "end_point":{"id":"stop_area:JDR:SA:CHVIN", "type":"stop_area"}, "sens":0, "routes":[{"type":"route", "id":"route:JDR:M14"}, {"type":"route", "id":"route:JDR:M1_R"}], "via":[{"id":"stop_area:JDR:SA:NATIO", "type":"stop_area"}, {"id":"stop_area:JDR:SA:REUIL", "type":"stop_area"}] }}], "application_periods": [{"begin": "2014-04-29T16:52:00Z","end": "2014-06-22T02:15:00Z"}]}
