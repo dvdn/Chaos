@@ -155,11 +155,8 @@ class validate_navitia(object):
             except exceptions.HeaderAbsent, e:
                 return marshal({'error': {'message': utils.parse_error(e)}},
                                error_fields), 400
-            if 'navitia' in g and g.navitia:
-                g.navitia.coverage = coverage
-                g.navitia.token = token
-
-            return func(*args, **kwargs)
+            nav = Navitia(current_app.config['NAVITIA_URL'], coverage, token)
+            return func(*args, navitia=nav, **kwargs)
         return wrapper
 
 
@@ -249,9 +246,7 @@ class Severity(flask_restful.Resource):
 
 class Disruptions(flask_restful.Resource):
     def __init__(self):
-        self.navitia = Navitia(current_app.config['NAVITIA_URL'],
-                               current_app.config['NAVITIA_COVERAGE'],
-                               current_app.config['NAVITIA_TOKEN'])
+        self.navitia = None
         self.parsers = {}
         self.parsers["get"] = reqparse.RequestParser()
         parser_get = self.parsers["get"]
@@ -297,8 +292,10 @@ class Disruptions(flask_restful.Resource):
             response = {'disruptions': result.items, 'meta': make_pager(result, 'disruption')}
             return marshal(response, disruptions_fields)
 
+    @validate_navitia()
     @validate_client(True)
-    def post(self, client):
+    def post(self, client, navitia):
+        self.navitia = navitia
         json = request.get_json()
         logging.getLogger(__name__).debug('POST disruption: %s', json)
         try:
@@ -333,9 +330,11 @@ class Disruptions(flask_restful.Resource):
         chaos.utils.send_disruption_to_navitia(disruption)
         return marshal({'disruption': disruption}, one_disruption_fields), 201
 
+    @validate_navitia()
     @validate_client()
     @validate_contributor()
-    def put(self, client, contributor, id):
+    def put(self, client, contributor,navitia, id):
+        self.navitia = navitia
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -555,13 +554,12 @@ class ImpactsByObject(flask_restful.Resource):
         parser_get.add_argument("start_date", type=utils.get_datetime, default=default_start_date)
         parser_get.add_argument("end_date", type=utils.get_datetime, default=default_end_date)
         parser_get.add_argument("uri[]", type=str, action="append")
-        self.navitia = Navitia(current_app.config['NAVITIA_URL'],
-                               current_app.config['NAVITIA_COVERAGE'],
-                               current_app.config['NAVITIA_TOKEN'])
+        self.navitia = None
 
     @validate_contributor()
     @validate_navitia()
-    def get(self, contributor):
+    def get(self, contributor, navitia):
+        self.navitia = navitia
         args = self.parsers['get'].parse_args()
         pt_object_type = args['pt_object_type']
         start_date = args['start_date']
@@ -578,9 +576,7 @@ class ImpactsByObject(flask_restful.Resource):
 
 class Impacts(flask_restful.Resource):
     def __init__(self):
-        self.navitia = Navitia(current_app.config['NAVITIA_URL'],
-                               current_app.config['NAVITIA_COVERAGE'],
-                               current_app.config['NAVITIA_TOKEN'])
+        self.navitia = None
         self.parsers = {}
         self.parsers["get"] = reqparse.RequestParser()
         parser_get = self.parsers["get"]
@@ -702,7 +698,8 @@ class Impacts(flask_restful.Resource):
 
     @validate_contributor()
     @validate_navitia()
-    def get(self, contributor, disruption_id, id=None):
+    def get(self, contributor, disruption_id, navitia, id=None):
+        self.navitia = navitia
         if id:
             if not id_format.match(id):
                 return marshal({'error': {'message': "id invalid"}},
@@ -732,8 +729,8 @@ class Impacts(flask_restful.Resource):
     @validate_client()
     @validate_contributor()
     @validate_navitia()
-    def post(self, client, contributor, disruption_id):
-
+    def post(self, client, contributor, navitia, disruption_id):
+        self.navitia = navitia
         if not id_format.match(disruption_id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
@@ -788,7 +785,8 @@ class Impacts(flask_restful.Resource):
     @validate_client()
     @validate_contributor()
     @validate_navitia()
-    def put(self, client, contributor, disruption_id, id):
+    def put(self, client, contributor, navitia, disruption_id, id):
+        self.navitia = navitia
         if not id_format.match(id):
             return marshal({'error': {'message': "id invalid"}},
                            error_fields), 400
