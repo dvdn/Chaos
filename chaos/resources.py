@@ -63,7 +63,7 @@ disruption_mapping = {
 }
 
 severity_mapping = {
-    'wording': None,
+    'wording': [],
     'color': None,
     'priority': None,
     'effect': None,
