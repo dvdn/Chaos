@@ -23,7 +23,7 @@ def single_wording_to_multi_wording(row):
     :param row: Severity table record
     :return: void
     """
-    query = "INSERT INTO severity_wordings (id, severity_id, key, wording, created_at) VALUES ('{}', '{}', '{}', '{}', '{}')"
+    query = "INSERT INTO severity_wordings (id, severity_id, key, value, created_at) VALUES ('{}', '{}', '{}', '{}', '{}')"
     now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
     id = uuid.uuid4()
 
@@ -37,7 +37,7 @@ def multi_wording_to_single_wording(row):
     :return: void
     """
     query = "UPDATE severity SET wording = '{}' WHERE id='{}'"
-    op.execute(query.format(row['wording'], row['severity_id']))
+    op.execute(query.format(row['value'], row['severity_id']))
 
 
 def single_wordings_to_multi_wordings():
@@ -59,7 +59,7 @@ def multi_wordings_to_single_wordings():
     """
     connection = op.get_bind()
 
-    query = 'SELECT DISTINCT ON (severity_id) severity_id, wording FROM severity_wordings ORDER BY severity_id, wording'
+    query = 'SELECT DISTINCT ON (severity_id) severity_id, value FROM severity_wordings ORDER BY severity_id, value'
     result = connection.execute(query)
     for row in result:
         multi_wording_to_single_wording(row)
@@ -70,7 +70,7 @@ def upgrade():
         sa.Column('id',         postgresql.UUID(),  nullable=False),
         sa.Column('severity_id',postgresql.UUID(),  nullable=False),
         sa.Column('key',        sa.VARCHAR(255),    nullable=False),
-        sa.Column('wording',    sa.Text(),          nullable=True),
+        sa.Column('value',      sa.Text(),          nullable=True),
         sa.Column('created_at', sa.DateTime(),      nullable=False),
         sa.Column('updated_at', sa.DateTime(),      nullable=True),
 
