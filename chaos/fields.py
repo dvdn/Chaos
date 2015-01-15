@@ -194,10 +194,17 @@ error_fields = {
     'error': fields.Nested({'message': fields.String})
 }
 
+wording_fields = {
+    'id': fields.Raw,
+    'key': fields.Raw,
+    'value': fields.Raw,
+    'created_at': FieldDateTime,
+    'updated_at': FieldDateTime
+}
 
 severity_fields = {
     'id': fields.Raw,
-    'wording': fields.Raw,
+    'wordings': fields.List(fields.Nested(wording_fields)),
     'color': fields.Raw,
     'created_at': FieldDateTime,
     'updated_at': FieldDateTime,
