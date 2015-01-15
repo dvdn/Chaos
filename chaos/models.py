@@ -99,12 +99,16 @@ class Contributor(TimestampMixin, db.Model):
             contributor = Contributor(code)
         return contributor
 
+
+
+
 class Severity(TimestampMixin, db.Model):
     """
     represent the severity of an impact
     """
+
     id = db.Column(UUID, primary_key=True)
-    wording = db.Column(db.Text, unique=False, nullable=False)
+    wordings = db.relationship('SeverityWordings', backref='severity', lazy='joined')
     color = db.Column(db.Text, unique=False, nullable=True)
     is_visible = db.Column(db.Boolean, unique=False, nullable=False, default=True)
     priority = db.Column(db.Integer, unique=False, nullable=True)
@@ -118,6 +122,7 @@ class Severity(TimestampMixin, db.Model):
     def __repr__(self):
         return '<Severity %r>' % self.id
 
+
     @classmethod
     def all(cls, client_id):
         return cls.query.filter_by(client_id=client_id, is_visible=True).order_by(cls.priority).all()
@@ -126,6 +131,20 @@ class Severity(TimestampMixin, db.Model):
     def get(cls, id, client_id):
         return cls.query.filter_by(id=id, client_id=client_id, is_visible=True).first_or_404()
 
+
+class SeverityWordings(TimestampMixin, db.Model):
+    __tablename__ = 'severity_wordings'
+    id = db.Column(UUID, primary_key=True)
+    severity_id = db.Column(UUID, db.ForeignKey(Severity.id))
+    key = db.Column(db.String(255), unique=False, nullable=False)
+    value = db.Column(db.Text, unique=False, nullable=False)
+
+    def __init__(self, severity_id=None):
+        self.id = str(uuid.uuid1())
+        self.severity_id = severity_id
+
+    def __repr__(self):
+        return '<SeverityWording %r>' % self.id
 
 
 class Cause(TimestampMixin, db.Model):
