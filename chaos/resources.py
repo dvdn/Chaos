@@ -267,7 +267,16 @@ class Severity(flask_restful.Resource):
         mapper.fill_from_json(severity, json, severity_mapping)
         severity.client = client
         db.session.add(severity)
+
+        #adding severity_wordings
+        for wordings in json['wordings']:
+            severity_wording = models.SeverityWordings()
+            severity_wording.key = wordings['key']
+            severity_wording.value = wordings['value']
+            severity.wordings.append(severity_wording)
+
         db.session.commit()
+
         return marshal({'severity': severity}, one_severity_fields), 201
 
     @validate_client()

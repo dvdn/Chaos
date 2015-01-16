@@ -142,14 +142,26 @@ disruptions_input_format = {
     'required': ['reference', 'cause', 'contributor']
 }
 
+
 severity_input_format = {
     'type': 'object',
-    'properties': {'wording': {'type': 'string', 'maxLength': 250},
+    'properties': {'wordings':
+                    {
+                       'type': 'array',
+                       'items': {
+                           'type': 'object',
+                           'properties': {
+                               'key': {'type': 'string', 'maxLength': 250},
+                               'value': {'type': 'string'},
+                           }
+                       },
+                       "uniqueItems": False
+                    },
                    'color': {'type': ['string', 'null'], 'maxLength': 20},
                    'priority': {'type': ['integer', 'null']},
                    'effect': {'enum': ['blocking', None]},
                    },
-    'required': ['wording']
+    'required': ['wordings']
 }
 
 cause_input_format = {
