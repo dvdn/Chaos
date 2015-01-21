@@ -147,6 +147,13 @@ class SeverityWordings(TimestampMixin, db.Model):
         return '<SeverityWording %r>' % self.id
 
 
+    @classmethod
+    def delete_by_severity_id(cls, severity_id):
+        wordings = cls.query.filter_by(severity_id=severity_id)
+        for wording in wordings:
+            db.session.delete(wording)
+
+
 class Cause(TimestampMixin, db.Model):
     """
     represent the cause of a disruption

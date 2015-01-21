@@ -298,6 +298,16 @@ class Severity(flask_restful.Resource):
                            error_fields), 400
 
         mapper.fill_from_json(severity, json, severity_mapping)
+
+        models.SeverityWordings.delete_by_severity_id(id);
+
+        for wording in json['wordings']:
+            if wording["id"]:
+                severity_wording = models.SeverityWordings()
+                severity_wording.key = wording['key']
+                severity_wording.value = wording['value']
+                severity.wordings.append(severity_wording)
+
         db.session.commit()
         return marshal({'severity': severity}, one_severity_fields), 200
 
