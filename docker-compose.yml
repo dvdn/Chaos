@@ -1,0 +1,31 @@
+version: '2'
+services:
+  database:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_USER=chaos
+      - POSTGRES_PASSWORD=chaos
+      - POSTGRES_DB=chaos
+    volumes:
+      - ./docker/add_uuid_extension.sh:/docker-entrypoint-initdb.d/add_uuid_extension.sh
+
+  ws:
+    image: canaltp/chaosweb:dev
+    command: /bin/bash /var/www/Chaos/docker/run-server.sh
+    environment:
+     - DOMAIN_NAME=chaosws-ws.local.canaltp.fr
+     - PYTHONIOENCODING=utf-8
+     - CHAOS_CONFIG_FILE=/var/www/Chaos/docker/default_settings.py
+    volumes:
+     - .:/var/www/Chaos
+    links:
+     - rabbitmq
+     - database
+
+  rabbitmq:
+    image: rabbitmq:management
+
+networks:
+  default:
+    external:
+      name: canaltp

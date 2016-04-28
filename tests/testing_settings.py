@@ -1,7 +1,7 @@
 #URI for postgresql
 # postgresql://<user>:<password>@<host>:<port>/<dbname>
 #http://docs.sqlalchemy.org/en/rel_0_9/dialects/postgresql.html#psycopg2
-SQLALCHEMY_DATABASE_URI = 'postgresql://navitia:navitia@localhost/chaos_testing'
+SQLALCHEMY_DATABASE_URI = 'postgresql://navitia:AGPXSnTFHmXknK@chaos_database/chaos_testing'
 
 NAVITIA_URL = 'http://navitia2-ws.ctp.customer.canaltp.fr/'
 
