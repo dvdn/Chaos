@@ -4,70 +4,28 @@ Install Docker by following instructions from [http://docs.docker.com/engine/ins
 
 Install Docker Compose by following instructions from [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 
-Initialize git submodules
+## Pre-requisites
+
+* docker-engine 1.10+
+* docker-compose 1.6+
+
+## Launch environment
 
 ```
-source provisioning/app/initialize-submodules.sh
+docker-compose up -d
 ```
 
-Build the required images
-
-```
-(cd provisioning && sudo docker-compose build)
-```
-
-Run PostgreSQL and application containers
-
-```
-(cd provisioning && sudo docker-compose  --x-networking up)
-```
+Chaos will be accessible using port 80 of the ws container.
 
 ## Testing
 
-Access a running Chaos web container
+Test features using Nose and Lettuce
 
 ```
-sudo docker exec -ti `sudo docker ps -a | grep chaos | grep provisioning_web | awk '{print $1}'` /bin/bash
-```
-
-Test features using Lettuce
-
-```
-cd /var/www/chaos && source venv/bin/activate && \
-pip install -r requirements/test.txt && \
-CHAOS_CONFIG_FILE=$(pwd)/tests/testing_settings.py lettuce tests/features
+docker-compose run --rm ws /bin/bash /var/www/Chaos/docker/run-tests.sh
 ```
 
 ## FAQ
-
-**How to build a PostgreSQL image for Chaos?**
-
-Execute the following command to change the current directory and build PostgreSQL image
-
-```
-(cd  provisioning/postgresql && sudo docker build -t postgresql .)
-```
-
-**How to run PostgresSQL container manually in background?**
-
-Execute the following commands in order to
- * export respectively development `postgres` and `navitia` passwords
- * run a database container
-
-```
-export POSTGRES_PASSWORD="%~\`4cj,|@snhg!''f@ay~"
-export NAVITIA_PASSWORD=AGPXSnTFHmXknK
-sudo docker network create provisioning
-sudo docker run \
---net=provisioning \
---name chaos_database \
--v `pwd`/provisioning/postgresql/logs:/var/log/postgresql \
--v `pwd`/provisioning/postgresql/data:/var/lib/postgresql \
--e PGPASSWORD=$POSTGRES_PASSWORD \
--e NAVITIA_PASSWORD=$NAVITIA_PASSWORD \
--e POSTGRES_PASS=$POSTGRES_PASSWORD \
--d postgresql
-```
 
 **How to connect to PostgreSQL running container?**
 

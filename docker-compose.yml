@@ -7,7 +7,7 @@ services:
       - POSTGRES_PASSWORD=chaos
       - POSTGRES_DB=chaos
     volumes:
-      - ./docker/add_uuid_extension.sh:/docker-entrypoint-initdb.d/add_uuid_extension.sh
+      - ./docker/database_addons:/docker-entrypoint-initdb.d
 
   ws:
     image: canaltp/chaosweb:dev
@@ -24,8 +24,3 @@ services:
 
   rabbitmq:
     image: rabbitmq:management
-
-networks:
-  default:
-    external:
-      name: canaltp
