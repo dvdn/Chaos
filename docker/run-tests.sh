@@ -8,4 +8,4 @@ pip install -r requirements/test.txt
 
 CHAOS_CONFIG_FILE=../docker/testing_settings.py nosetests
 
-CHAOS_CONFIG_FILE=../docker/testing_settings.py lettuce/features
+CHAOS_CONFIG_FILE=../docker/testing_settings.py lettuce tests/features
