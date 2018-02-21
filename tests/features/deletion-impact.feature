@@ -1,5 +1,11 @@
 Feature: Delete impacts in a Disruption
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Contributors" with "contrib1"
+        I fill in header "X-Coverage" with "jdr"
+
     Scenario: Delete an impact without or wrong contributor in the header fails
 
         Given I have the following clients in my database:
@@ -27,9 +33,7 @@ Feature: Delete impacts in a Disruption
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d47-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
 
-
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I remove header "X-Contributors"
         When I delete "/disruptions/6a826e64-028f-11e4-92d0-090027079ff3/impacts/7ffab232-3d47-4eea-aa2c-22f8680230b6"
         Then the status code should be "400"
         And the field "error.message" should be "The parameter X-Contributors does not exist in the header"
@@ -66,9 +70,6 @@ Feature: Delete impacts in a Disruption
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
 
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions/6a826e64-028f-11e4-92d0-090027079ff3/impacts"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -113,8 +114,6 @@ Feature: Delete impacts in a Disruption
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d47-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
 
-
-        I fill in header "X-Contributors" with "contrib1"
         When I delete "/disruptions/6a826e64-028f-11e4-92d0-090027079ff3/impacts/AA"
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"
@@ -149,7 +148,6 @@ Feature: Delete impacts in a Disruption
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 6a826e64-028f-11e4-92d0-090027079ff3 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
 
 
-        I fill in header "X-Contributors" with "contrib1"
         When I delete "/disruptions/6a826e64-028f-11e4-92d0-090027079ff3/impacts"
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"

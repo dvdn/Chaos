@@ -1,5 +1,13 @@
 Feature: update cause
+
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
+
     Scenario: modify of Cause without client in the header fails
+        I remove header "X-Customer-Id"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wording": "foo"}
@@ -26,7 +34,6 @@ Feature: update cause
         Given I have the following clients in my database:
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wording": "foo"}
@@ -37,7 +44,6 @@ Feature: update cause
         Given I have the following clients in my database:
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/AA-BB" with:
         """
         {"wording": "foo"}
@@ -46,12 +52,10 @@ Feature: update cause
         And the header "Content-Type" should be "application/json"
         And the field "error.message" should be "id invalid"
 
-
     Scenario: the Cause with id not in url
         Given I have the following clients in my database:
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes" with:
         """
         {"wording": "foo"}
@@ -77,7 +81,6 @@ Feature: update cause
             | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | False      | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {}
@@ -94,7 +97,6 @@ Feature: update cause
             | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | False      | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}]}
@@ -113,7 +115,6 @@ Feature: update cause
             | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | False      | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wording": "cc", "wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}]}
@@ -131,7 +132,6 @@ Feature: update cause
         Given I have the following causes in my database:
             | wording   | created_at          | updated_at          | is_visible | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | False      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}]}
@@ -153,7 +153,6 @@ Feature: update cause
             | wording   | created_at          | updated_at          | is_visible |category_id                           | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       |7ffab230-3d48-4eea-aa2c-22f8680230b6  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | False      |6ffab230-3d48-4eea-aa2c-22f8680230b6  | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}], "category":{"id": "6ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -175,7 +174,6 @@ Feature: update cause
             | wording   | created_at          | updated_at          | is_visible |category_id                               | id                                   |client_id                            |
             | weather   | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       |7ffab230-3d48-4eea-aa2c-22f8680230b6     | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | False      |7ffab230-3d48-4eea-aa2c-22f8680230b6     | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I put to "/causes/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}]}

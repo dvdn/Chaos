@@ -46,6 +46,10 @@ class HeaderAbsent(Exception):
     def __init__(self, message=''):
         self.message = message
 
+class Unauthorized(Exception):
+
+    def __init__(self, message=''):
+        self.message = message
 
 class InvalidJson(Exception):
 

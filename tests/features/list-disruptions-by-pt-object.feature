@@ -1,5 +1,11 @@
 Feature: list impacts by ptobject and/or uri(s)
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
+
     Scenario: Use uri filter to display one disruption
 
         Given I have the following contributors in my database:
@@ -51,9 +57,6 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b5 | 7ffab234-3d49-4eea-aa2c-22f8680230b3 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=network:JDR:1"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -110,14 +113,10 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b5 | 7ffab234-3d49-4eea-aa2c-22f8680230b3 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=network:JDR:1"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 2
-
 
     Scenario: Use uri filter to display with a archived disruption
         Given I have the following contributors in my database:
@@ -170,9 +169,6 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b5 | 7ffab234-3d49-4eea-aa2c-22f8680230b3 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=network:JDR:1"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -230,15 +226,11 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b5 | 7ffab234-3d49-4eea-aa2c-22f8680230b3 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b6 | 7ffab234-3d49-4eec-aa2c-22f8680230b4 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=network:JDR:1"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 1
         And the field "disruptions.0.id" should be "7ffab230-3d48-4eea-aa2c-22f8680230b6"
-
 
     #Here we have a disruption with one impact, two objects (one object is present also in a line_section of another disruption/impact)
     #Another disruption with one impact, one object line_section having route, another object (network)
@@ -299,9 +291,6 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |7ffab232-3d47-4eea-aa2c-22f8680230b1 | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 16:52:00 |
 
         #Query on object 'stop_area:JDR:SA:ESDEN' present in a disruption
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=stop_area:JDR:SA:ESDEN"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -315,8 +304,6 @@ Feature: list impacts by ptobject and/or uri(s)
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 1
         And the field "disruptions.0.id" should be "8ffab230-3d48-4eea-aa2c-22f8680230b6"
-
-
 
     # 3 disruptions, impacts line_section and lines
     # Disruption 1 / 1 impact line
@@ -387,9 +374,6 @@ Feature: list impacts by ptobject and/or uri(s)
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 |dffab555-3d47-4eea-aa2c-22f8680230b1 | 4ffab232-3d47-4eea-aa2c-22f8680230b6 |2014-01-20 16:52:00                  |2014-01-30 19:52:00 |
 
         #Query on object 'line:JDR:M1' present in a disruption
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=line:JDR:M1"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -397,27 +381,18 @@ Feature: list impacts by ptobject and/or uri(s)
         And the field "disruptions.0.id" should be "9ffab230-3d48-4eea-aa2c-22f8680230b6"
 
         #Query on object 'line:JDR:M1&line_section=true' present in a disruption
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=line:JDR:M1&line_section=true"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 2
 
         #Query on object 'line:JDR:M1&line_section=false' present in a disruption
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=line:JDR:M1&line_section=false"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 1
 
         #Query on object 'line:JDR:M12' present in a disruption
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions?uri=line:JDR:M12"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"

@@ -27,14 +27,13 @@
 # https://groups.google.com/d/forum/navitia
 # www.navitia.io
 
-import requests
 import logging
+import requests
+from retrying import retry
 from chaos import exceptions
 from chaos import cache, app
-from retrying import retry
 
 __all__ = ['Navitia']
-
 
 class Navitia(object):
     def __init__(self, url, coverage, token=None, timeout=1):
@@ -54,11 +53,11 @@ class Navitia(object):
         if object_type == 'line_section':
             return None
         if object_type not in self.collections:
-            logging.getLogger(__name__).exception('object type {object_type} unknown'.format(object_type=object_type))
+            logging.getLogger(__name__).exception('object type %s unknown', object_type)
             raise exceptions.ObjectTypeUnknown(object_type)
 
         if pt_objects and pt_objects != 'networks':
-            logging.getLogger(__name__).exception('object type {object_type} unknown'.format(object_type=object_type))
+            logging.getLogger(__name__).exception('object type %s unknown', object_type)
             raise exceptions.ObjectTypeUnknown(object_type)
 
         query = '{url}/v1/coverage/{coverage}/{collection}/{uri}'.format(
@@ -67,7 +66,8 @@ class Navitia(object):
             query = '{q}/{objects}'.format(q=query, objects=pt_objects)
         return query + '?depth=0'
 
-    @retry(retry_on_exception=lambda e: isinstance(e, requests.exceptions.Timeout), stop_max_attempt_number=3, wait_fixed=100)
+    @retry(retry_on_exception=lambda e: isinstance(e, requests.exceptions.Timeout),
+           stop_max_attempt_number=3, wait_fixed=100)
     def _navitia_caller(self, query):
         try:
             return requests.get(query, headers={"Authorization": self.token}, timeout=self.timeout)
@@ -82,13 +82,13 @@ class Navitia(object):
     def get_pt_object(self, uri, object_type, pt_objects=None):
         cache_key = 'Chaos.get_pt_object.{}.{}.{}.{}.{}'.format(self.coverage, self.get_coverage_publication_date(),
                                                                 uri, object_type, pt_objects)
-        rv = cache.get(cache_key)
-        if rv is not None:
-            logging.getLogger().debug("Cache hit for coverage/uri: {}/{}".format(self.coverage, uri))
-            return rv
+        cached_pt_object = cache.get(cache_key)
+        if cached_pt_object is not None:
+            logging.getLogger().debug('Cache hit for coverage/uri: %s/%s', self.coverage, uri)
+            return cached_pt_object
 
-        logging.getLogger().debug("Cache miss for coverage/uri: {}/{}".format(self.coverage, uri))
-        logging.getLogger().debug("Publication date: {}".format(self.get_coverage_publication_date()))
+        logging.getLogger().debug('Cache miss for coverage/uri: %s/%s', self.coverage, uri)
+        logging.getLogger().debug('Publication date: %s', self.get_coverage_publication_date())
 
         try:
             query = self.query_formater(uri, object_type, pt_objects)
@@ -106,20 +106,22 @@ class Navitia(object):
         if response:
             json = response.json()
             if pt_objects and json[pt_objects]:
-                rv = json[pt_objects]
-                cache.set(cache_key, rv, app.config['CACHE_CONFIGURATION'].get('NAVITIA_CACHE_TIMEOUT', 3600))
-                return rv
+                json_pt_objects = json[pt_objects]
+                cache.set(cache_key, json_pt_objects,
+                          app.config['CACHE_CONFIGURATION'].get('NAVITIA_CACHE_TIMEOUT', 3600))
+                return json_pt_objects
 
             if self.collections[object_type] in json and json[self.collections[object_type]]:
-                rv = json[self.collections[object_type]][0]
-                cache.set(cache_key, rv, app.config['CACHE_CONFIGURATION'].get('NAVITIA_CACHE_TIMEOUT', 3600))
-                return rv
+                json_pt_object = json[self.collections[object_type]][0]
+                cache.set(cache_key, json_pt_object,
+                          app.config['CACHE_CONFIGURATION'].get('NAVITIA_CACHE_TIMEOUT', 3600))
+                return json_pt_object
 
         return None
 
     @cache.memoize(timeout=app.config['CACHE_CONFIGURATION'].get('NAVITIA_PUBDATE_CACHE_TIMEOUT', 600))
     def get_coverage_publication_date(self):
-        logging.getLogger().debug("Cache miss for publication date coverage {}".format(self.coverage))
+        logging.getLogger().debug('Cache miss for publication date coverage %s', self.coverage)
         uri = '{}/v1/coverage/{}/status'.format(self.url, self.coverage)
         try:
             response = self._navitia_caller(uri)
@@ -137,4 +139,5 @@ class Navitia(object):
         Overrides __repr__ method in order to separate cached entities by token, coverage and url
         :return: String
         """
-        return 'chaos.Navitia(url=%s, coverage=%s, token=%s, timeout=%d)' % (self.url, self.coverage, self.token, self.timeout)
+        return 'chaos.Navitia(url=%s, coverage=%s, token=%s, timeout=%d)' % (self.url, self.coverage,
+                                                                             self.token, self.timeout)

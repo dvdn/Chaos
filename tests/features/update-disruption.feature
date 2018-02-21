@@ -1,5 +1,11 @@
 Feature: update disruption
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
+
    Scenario: update disruption without contributor in the header
 
         Given I have the following clients in my database:
@@ -17,10 +23,7 @@ Feature: update disruption
         Given I have the following disruptions in my database:
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
-
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I remove header "X-Contributors"
         When I put to "/disruptions/AA-BB" with:
         """
         {"reference":"foobarz","contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -47,10 +50,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/AA-BB" with:
         """
         {"reference":"foobarz","contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -58,7 +57,6 @@ Feature: update disruption
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"
         And the field "error.message" should be "id invalid"
-
 
    Scenario: update disruption with id not not in url
 
@@ -78,10 +76,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions" with:
         """
         {"reference":"foobarz","contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -116,10 +110,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "AA", "type": "stop_area"}]}
@@ -146,10 +136,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"reference":"foobarz", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -176,10 +162,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -206,10 +188,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "publication_period": {"begin":"2014-06-24T13:35:00Z","end":"2014-07-08T18:00:00Z"}, "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -242,10 +220,6 @@ Feature: update disruption
             | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "tags":[{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}]}
@@ -279,10 +253,6 @@ Feature: update disruption
             | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 5ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "tags":[{"id": "5ffab230-3d48-4eea-aa2c-22f8680230b6"}]}
@@ -298,7 +268,6 @@ Feature: update disruption
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.tags" should have a size of 2
-
 
    Scenario: I can update with delete tag and associate_disruption_tag is not empty (2 associate_disruption_tag)
 
@@ -323,10 +292,6 @@ Feature: update disruption
             | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 5ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "tags":[{"id": "5ffab230-3d48-4eea-aa2c-22f8680230b6"}, {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}]}
@@ -368,10 +333,6 @@ Feature: update disruption
             | weather   |  2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 5ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | strike    |  2014-04-04T23:52:12 | 2014-04-06T22:52:12 | True       | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "tags":[{"id": "5ffab230-3d48-4eea-aa2c-22f8680230b6"}, {"id": "7ffab232-3d48-4eea-aa2c-22f8680230b6"}]}
@@ -388,12 +349,10 @@ Feature: update disruption
         And the header "Content-Type" should be "application/json"
         And the field "disruption.tags" should have a size of 0
 
-        I fill in header "X-Customer-Id" with "5"
         When I get "/tags"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "tags" should have a size of 2
-
 
    Scenario: I can update, verification version
 
@@ -413,10 +372,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |version|
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | a750994c-01fe-11e4-b4fb-080027079ff3 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |1|
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -432,7 +387,6 @@ Feature: update disruption
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.version" should be "3"
-
 
    Scenario: I can update with add 1 localization and associate_disruption_tag is empty
 
@@ -452,10 +406,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | a750994c-01fe-11e4-b4fb-080027079ff3 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "stop_area:JDR:SA:PTVIN", "type": "stop_area"}]}
@@ -482,10 +432,6 @@ Feature: update disruption
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date |cause_id                              | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | a750994c-01fe-11e4-b4fb-080027079ff3 | None                   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "stop_area:JDR:SA:PTVIN", "type": "stop_area"}, {"id": "stop_area:JDR:SA:ALESI", "type": "stop_area"}]}
@@ -522,10 +468,6 @@ Feature: update disruption
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "stop_area:JDR:SA:PTVIN", "type": "stop_area"}, {"id": "stop_area:JDR:SA:ALESI", "type": "stop_area"}]}
@@ -562,10 +504,6 @@ Feature: update disruption
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "stop_area:JDR:SA:ALESI", "type": "stop_area"}]}
@@ -603,10 +541,6 @@ Feature: update disruption
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -641,10 +575,6 @@ Feature: update disruption
             | pt_object_id                                  | disruption_id                        |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6          | a750994c-01fe-11e4-b4fb-080027079ff3 |
 
-        I fill in header "X-Customer-Id" with "5"
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I put to "/disruptions/a750994c-01fe-11e4-b4fb-080027079ff3" with:
         """
         {"reference":"foobarz", "contributor": "contrib1", "cause":{"id":"7ffab230-3d48-4eea-aa2c-22f8680230b6"}, "localization":[{"id": "stop_area:JDR:SA:PTVIN", "type": "stop_area"}, {"id": "stop_area:JDR:SA:ALESI", "type": "stop_area"}]}
@@ -652,7 +582,6 @@ Feature: update disruption
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.localization" should have a size of 2
-
 
     Scenario: Update a 'draft' disruption without explicit status doesn't change it
         Given I have the following clients in my database:
@@ -668,8 +597,6 @@ Feature: update disruption
         | reference | note  | created_at          | status | id                                   | cause_id                              | client_id                           | contributor_id                       |
         | foo       | hi    | 2014-04-02T23:52:12 | draft  | 2ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
@@ -679,7 +606,6 @@ Feature: update disruption
         And the header "Content-Type" should be "application/json"
         And the field "disruption.reference" should be "bar"
         And the field "disruption.status" should be "draft"
-
 
     Scenario: Update a 'published' disruption without explicit status doesn't change it
         Given I have the following clients in my database:
@@ -695,8 +621,6 @@ Feature: update disruption
         | reference | note  | created_at          | status     | id                                   | cause_id                              | client_id                           | contributor_id                       |
         | foo       | hi    | 2014-04-02T23:52:12 | published  | 2ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
@@ -706,7 +630,6 @@ Feature: update disruption
         And the header "Content-Type" should be "application/json"
         And the field "disruption.reference" should be "bar"
         And the field "disruption.status" should be "published"
-
 
     Scenario: Update a 'draft' disruption to 'published'
         Given I have the following clients in my database:
@@ -722,8 +645,6 @@ Feature: update disruption
         | reference | note  | created_at          | status | id                                   | cause_id                              | client_id                           | contributor_id                       |
         | foo       | hi    | 2014-04-02T23:52:12 | draft  | 2ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
@@ -732,7 +653,6 @@ Feature: update disruption
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.status" should be "published"
-
 
     Scenario: Update a 'published' disruption to 'draft' is forbidden
         Given I have the following clients in my database:
@@ -748,8 +668,6 @@ Feature: update disruption
         | reference | note  | created_at          | status    | id                                   | cause_id                              | client_id                           | contributor_id                       |
         | foo       | hi    | 2014-04-02T23:52:12 | published | 2ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
         When I put to "/disruptions/2ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """

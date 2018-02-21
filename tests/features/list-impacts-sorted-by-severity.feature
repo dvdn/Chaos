@@ -1,5 +1,11 @@
 Feature: list impacts sorted by severity.priority
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
+
     Scenario: Use pager to display impacts
         Given I have the following clients in my database:
             | client_code   | created_at          | updated_at          | id                                   |
@@ -25,9 +31,6 @@ Feature: list impacts sorted by severity.priority
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab232-3d48-4eea-aa2c-22f8680230b6 |
             | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab234-3d49-4eec-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab232-3d48-4eea-aa2c-22f8680230b7 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6/impacts"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"

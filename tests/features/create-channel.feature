@@ -1,6 +1,11 @@
 Feature: Create Channel
 
+  Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
     Scenario: we cannot create channel without client
+        I remove header "X-Customer-Id"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500, "content_type": "text/type"}
@@ -8,7 +13,6 @@ Feature: Create Channel
         Then the status code should be "400"
 
     Scenario: we cannot create channel without channel type
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500, "content_type": "text/type"}
@@ -16,7 +20,6 @@ Feature: Create Channel
         Then the status code should be "400"
 
     Scenario: creation of channel
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500, "content_type": "text/type", "types": ["web","mobile"]}
@@ -28,7 +31,6 @@ Feature: Create Channel
         And the field "channel.types.0" should be "web"
 
     Scenario: We can't create a channel without name, max_size and
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500}
@@ -37,7 +39,6 @@ Feature: Create Channel
         And the header "Content-Type" should be "application/json"
 
     Scenario: creation of channel with duplicate types fails
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500, "content_type": "text/type", "types": ["mobile", "mobile"}]}
@@ -46,7 +47,6 @@ Feature: Create Channel
 
     #channel_type_values = ["web", "sms", "email", "mobile", "notification", "twitter", "facebook"]
     Scenario: creation of channel with wrong types fails
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/channels" with:
         """
         {"name": "foo", "max_size": 500, "content_type": "text/type", "types": ["mail"]}

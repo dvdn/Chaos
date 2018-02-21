@@ -1,5 +1,11 @@
 Feature: Create tag
+
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
     Scenario: we cannot create tag  without client in the header
+        I remove header "X-Customer-Id"
         When I post to "/tags" with:
         """
         {"name": "foo"}
@@ -7,7 +13,6 @@ Feature: Create tag
         Then the status code should be "400"
 
     Scenario: name is required
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/tags"
         """
         {"nameaa": "foo"}
@@ -17,7 +22,6 @@ Feature: Create tag
         And the field "error.message" should be "'name' is a required property"
 
     Scenario: creation of tag
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/tags" with:
         """
         {"name": "foo"}
@@ -31,7 +35,6 @@ Feature: Create tag
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/tags" with:
         """
         {"name": "foo"}
@@ -41,7 +44,6 @@ Feature: Create tag
         And the field "tag.name" should be "foo"
 
     Scenario: Tag are created
-        I fill in header "X-Customer-Id" with "5"
         Given I post to "/tags" with:
         """
         {"name": "foo"}
@@ -53,7 +55,6 @@ Feature: Create tag
         And the field "tags.0.name" should be "foo"
 
     Scenario: We don't accept two tags with the same name
-        I fill in header "X-Customer-Id" with "5"
         Given I post to "/tags" with:
         """
         {"name": "foo"}
@@ -76,7 +77,6 @@ Feature: Create tag
             | foo    | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | False      | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | weather| 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | True       | 2ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I get "/tags/7ffab230-3d48-4eea-aa2c-22f8680230b6"
         Then the status code should be "404"
         Given I post to "/tags" with:

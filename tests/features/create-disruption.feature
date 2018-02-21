@@ -234,7 +234,6 @@ Feature: Create disruption
         And the field "disruption.localization.0.type" should be "stop_area"
         And the field "disruption.version" should be "1"
 
-
     Scenario: We cannot create a disruption with localization not in navitia
 
         Given I have the following clients in my database:
@@ -313,7 +312,6 @@ Feature: Create disruption
         And the field "disruptions.0.note" should be null
         And the field "disruptions.0.contributor" should be "contrib1"
 
-
     Scenario: Create a disruption without explicit status leads to a 'published' status
         Given I have the following clients in my database:
         | client_code | created_at          | updated_at          | id                                   |
@@ -335,7 +333,6 @@ Feature: Create disruption
         Then the status code should be "201"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.status" should be "published"
-
 
     Scenario: Create a disruption with an explicit status 'published'
         Given I have the following clients in my database:
@@ -359,7 +356,6 @@ Feature: Create disruption
         And the header "Content-Type" should be "application/json"
         And the field "disruption.status" should be "published"
 
-
     Scenario: Create a disruption with an explicit status 'draft'
         Given I have the following clients in my database:
         | client_code | created_at          | updated_at          | id                                   |
@@ -381,7 +377,6 @@ Feature: Create disruption
         Then the status code should be "201"
         And the header "Content-Type" should be "application/json"
         And the field "disruption.status" should be "draft"
-
 
     Scenario: Status must be 'published' or 'draft' when sent explicitly
         Given I have the following clients in my database:

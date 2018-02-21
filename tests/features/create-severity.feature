@@ -1,6 +1,11 @@
 Feature: Create severity
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
     Scenario: we cannot create severity without client
+        I remove header "X-Customer-Id"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}]}
@@ -8,13 +13,10 @@ Feature: Create severity
         Then the status code should be "400"
 
     Scenario: wordings is required
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities"
         Then the status code should be "400"
 
-
     Scenario: creation of severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}]}
@@ -26,7 +28,6 @@ Feature: Create severity
         And the field "severity.color" should be null
 
     Scenario: Severity are created
-        I fill in header "X-Customer-Id" with "5"
         Given I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}]}
@@ -40,7 +41,6 @@ Feature: Create severity
         And the field "severities.0.color" should be null
 
     Scenario: We can create a severity with a color
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456"}
@@ -52,7 +52,6 @@ Feature: Create severity
         And the field "severity.color" should be "#123456"
 
     Scenario: We can create a severity with a priority
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 2, "effect": null}
@@ -79,7 +78,6 @@ Feature: Create severity
         And the header "Content-Type" should be "application/json"
 
     Scenario: We can create a no_service severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 1, "effect": "no_service"}
@@ -92,7 +90,6 @@ Feature: Create severity
         And the field "severity.effect" should be "no_service"
 
     Scenario: We can create a reduced_service severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 2, "effect": "reduced_service"}
@@ -105,7 +102,6 @@ Feature: Create severity
         And the field "severity.effect" should be "reduced_service"
 
     Scenario: We can create a significant_delays severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 3, "effect": "significant_delays"}
@@ -118,7 +114,6 @@ Feature: Create severity
         And the field "severity.effect" should be "significant_delays"
 
     Scenario: We can create a detour severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 4, "effect": "detour"}
@@ -131,7 +126,6 @@ Feature: Create severity
         And the field "severity.effect" should be "detour"
 
     Scenario: We can create a additional_service severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 5, "effect": "additional_service"}
@@ -144,7 +138,6 @@ Feature: Create severity
         And the field "severity.effect" should be "additional_service"
 
     Scenario: We can create a modified_service severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 6, "effect": "modified_service"}
@@ -157,7 +150,6 @@ Feature: Create severity
         And the field "severity.effect" should be "modified_service"
 
     Scenario: We can create a other_effect severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 7, "effect": "other_effect"}
@@ -170,7 +162,6 @@ Feature: Create severity
         And the field "severity.effect" should be "other_effect"
 
     Scenario: We can create a unknown_effect severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 8, "effect": "unknown_effect"}
@@ -183,7 +174,6 @@ Feature: Create severity
         And the field "severity.effect" should be "unknown_effect"
 
     Scenario: We can create a stop_moved severity
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/severities" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "#123456", "priority": 9, "effect": "stop_moved"}

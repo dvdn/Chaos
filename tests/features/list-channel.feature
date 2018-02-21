@@ -1,10 +1,15 @@
 Feature: list channel
+
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
     Scenario: list without client in the header fails
+        I remove header "X-Customer-Id"
         When I get "/channels"
         Then the status code should be "400"
 
     Scenario: list without client in the database fails
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels"
         Then the status code should be "404"
 
@@ -13,7 +18,6 @@ Feature: list channel
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -27,7 +31,6 @@ Feature: list channel
             | name   | max_size   | created_at          | updated_at          | content_type| id                                   |client_id                            |
             | short  | 140        | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | text/plain  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | email  | 520        | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | text/plain  | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -46,7 +49,6 @@ Feature: list channel
             | Message Email (OV1)   | 520        | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | text/plain  | 7ffab232-3d48-4eea-aa2c-22f8680230b8 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | short                 | 140        | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | text/plain  | 7ffab230-3d48-4eea-aa2c-22f8680230b9 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | long                  | 140        | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | text/plain  | 7ffab230-3d48-4eea-aa2c-22f8680230b5 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -64,7 +66,6 @@ Feature: list channel
             | name   | max_size   | created_at          | updated_at          | content_type| id                                   |client_id                            |
             | short  | 140        | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | text/plain  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | email  | 520        | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | text/plain  | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels/7ffab230-3d48a-a2c-22f8680230b6"
         Then the status code should be "400"
 
@@ -76,7 +77,6 @@ Feature: list channel
             | name   | max_size   | created_at          | updated_at          | content_type| id                                   |client_id                            |
             | short  | 140        | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | text/plain  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
             | email  | 520        | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | text/plain  | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |7ffab229-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Customer-Id" with "5"
         When I get "/channels/7ffab232-3d48-4eea-aa2c-22f8680230b6"
         Then the status code should be "200"
         And the field "channel.name" should be "email"

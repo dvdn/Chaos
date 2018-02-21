@@ -1,5 +1,11 @@
 Feature: update severity
 
+    Background:
+        I fill in header "X-Customer-Id" with "test"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Contributors" with "contributor"
+
     Scenario: I cannot update a severity without client in header
         Given I have the following clients in my database:
             | client_code   | created_at          | updated_at          | id                                   |
@@ -21,7 +27,7 @@ Feature: update severity
             |  7ffab232-3d48-4eea-aa2c-22f8680230b6     | 7ffab230-3d48-4eea-aa2c-22f8680230b6  |
             |  7ffab232-3d48-4eea-aa2c-22f8680230b6     | 7ffab232-3d48-4eea-aa2c-22f8680230b6  |
 
-
+        I remove header "X-Customer-Id"
         When I put to "/severities/7ffab230-3d48-4eea-aa2c-22f8680230b6" with:
         """
         {"wordings": [{"key": "test", "value": "foo"}], "color": "blue"}

@@ -1,6 +1,11 @@
 Feature: Create cause
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
     Scenario: we cannot create a cause without client
+        I remove header "X-Customer-Id"
         When I post to "/causes"
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}], "category":{"id": "7ffab555-3d48-4eea-aa2c-22f8680230b6"}}
@@ -9,7 +14,6 @@ Feature: Create cause
         And the header "Content-Type" should be "application/json"
 
     Scenario: wordings is required
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes"
         """
         {"category":{"id": "7ffab555-3d48-4eea-aa2c-22f8680230b6"}}
@@ -19,7 +23,6 @@ Feature: Create cause
         And the field "error.message" should be "'wordings' is a required property"
 
     Scenario: wordings empty
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes"
         """
         {"wordings": [], "category":{"id": "7ffab555-3d48-4eea-aa2c-22f8680230b6"}}
@@ -27,7 +30,6 @@ Feature: Create cause
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"
         And the field "error.message" should be "[] is too short"
-
 
     Scenario: creation of cause
         Given I have the following clients in my database:
@@ -38,7 +40,6 @@ Feature: Create cause
             | name      | note  | created_at          | updated_at          | id                                   | client_id                            |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}], "category":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -56,7 +57,6 @@ Feature: Create cause
             | name      | note  | created_at          | updated_at          | id                                   | client_id                            |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}], "category":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -76,7 +76,6 @@ Feature: Create cause
             | name      | note  | created_at          | updated_at          | id                                   | client_id                            |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes" with:
         """
         {"wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}], "category":{"id": "6ffab230-3d48-4eea-aa2c-22f8680230b6"}}
@@ -89,7 +88,6 @@ Feature: Create cause
             | client_code   | created_at          | updated_at          | id                                   |
             | 5             | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes" with:
         """
         {"wordings": [{"key": "  ", "value": "bb"}]}
@@ -107,7 +105,6 @@ Feature: Create cause
             | name      | note  | created_at          | updated_at          | id                                   | client_id                            |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Customer-Id" with "5"
         When I post to "/causes" with:
         """
         {"wording": "mm", "wordings": [{"key": "aa", "value": "bb"}, {"key": "dd", "value": "cc"}, {"key": "pp", "value": "mm"}], "category":{"id": "7ffab230-3d48-4eea-aa2c-22f8680230b6"}}

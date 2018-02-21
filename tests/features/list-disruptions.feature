@@ -1,13 +1,16 @@
 Feature: list disruptions
 
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
+
     Scenario: if there is no disruption the list is empty
         Given I have the following contributors in my database:
             | contributor_code   | created_at          | updated_at          | id                                   |
             | contrib1           | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -31,9 +34,7 @@ Feature: list disruptions
             | reference | note  | created_at          | updated_at          | status    | id                                   | cause_id                             | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
             | bar       | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
         When I get "/disruptions"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -68,7 +69,6 @@ Feature: list disruptions
         And the field "disruptions.0.status" should be "draft"
         And the field "disruptions.1.status" should be "published"
 
-
     Scenario: Disruption have a publication_period
 
         Given I have the following clients in my database:
@@ -87,9 +87,7 @@ Feature: list disruptions
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |  2014-04-02T14:00:00   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
             | bar       | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |  2014-04-02T14:00:00   | 2014-04-02T19:00:00  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
         When I get "/disruptions"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -117,9 +115,7 @@ Feature: list disruptions
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |  2014-04-02T14:00:00   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
             | bar       | bye   | 2014-04-04T23:52:12 | 2014-04-06T22:52:12 | published | 7ffab232-3d48-4eea-aa2c-22f8680230b6 |  2014-04-02T14:00:00   | 2014-04-02T19:00:00  | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+
         When I get "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -144,14 +140,10 @@ Feature: list disruptions
             | reference | note  | created_at          | updated_at          | status    | id                                   | start_publication_date | end_publication_date | cause_id                             | client_id                            | contributor_id                       |
             | foo       | hello | 2014-04-02T23:52:12 | 2014-04-02T23:55:12 | published | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |  2014-04-02T14:00:00   | None                 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions/aa-bb--cc"
         Then the status code should be "400"
         And the header "Content-Type" should be "application/json"
         And the field "error.message" should be "id invalid"
-
 
     Scenario: list disruptions with localization
 
@@ -179,9 +171,6 @@ Feature: list disruptions
             | pt_object_id                               | disruption_id                        |
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -215,9 +204,6 @@ Feature: list disruptions
             | pt_object_id                               | disruption_id                        |
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab230-3d48-4eea-aa2c-22f8680230b6 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/disruptions/7ffab230-3d48-4eea-aa2c-22f8680230b6"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -225,7 +211,6 @@ Feature: list disruptions
         And the field "disruption.localization.0.id" should be "stop_area:JDR:SA:AAA"
         And the field "disruption.localization.0.type" should be "stop_area"
         And the field "disruption.localization.0.name" should be "Unable to find object"
-
 
     Scenario: list all disruptions with status filter set to 'draft'
         Given I have the following clients in my database:
@@ -242,16 +227,14 @@ Feature: list disruptions
         | foo       | hello | 2014-04-02T23:52:12 | published | 6ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         | bar       | you   | 2014-04-02T23:52:12 | draft     | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
+
         When I get to "/disruptions?status[]=draft":
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "disruptions" should have a size of 1
         And the field "disruptions.0.status" should be "draft"
         And the field "disruptions.0.id" should be "7ffab230-3d48-4eea-aa2c-22f8680230b6"
-
 
     Scenario: list all disruptions with status filter set to 'published'
         Given I have the following clients in my database:
@@ -268,8 +251,6 @@ Feature: list disruptions
         | foo       | hello | 2014-04-02T23:52:12 | published | 6ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         | bar       | you   | 2014-04-02T23:52:12 | draft     | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab230-3d48-4eea-aa2c-22f8680230b6 | 7ffab229-3d48-4eea-aa2c-22f8680230b6 | 7ffab555-3d48-4eea-aa2c-22f8680230b6 |
         I fill in header "X-Customer-Id" with "test"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         I fill in header "X-Contributors" with "contributor"
         When I get to "/disruptions?status[]=published":
         Then the status code should be "200"

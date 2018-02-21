@@ -1,4 +1,10 @@
 Feature: list impacts by application periods
+
+    Background:
+        I fill in header "X-Customer-Id" with "5"
+        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
+        I fill in header "X-Coverage" with "jdr"
+        I fill in header "X-Contributors" with "contrib1"
 #
 #               |                                                                20-01-2014                  30-01-2014
 #               |                                                                    +---------------------------+
@@ -59,9 +65,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2013-12-01T23:52:12Z&end_date=2013-12-20T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -127,9 +130,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2013-12-01T23:52:12Z&end_date=2014-01-02T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -197,16 +197,12 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2013-12-01T23:52:12Z&end_date=2014-01-08T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "objects" should have a size of 1
         And the field "objects.0.id" should be "network:JDR:1"
         And the field "objects.0.impacts" should have a size of 1
-
 
 #
 #               |                                                                20-01-2014                  30-01-2014
@@ -268,16 +264,12 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2014-01-02T23:52:12Z&end_date=2014-01-06T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "objects" should have a size of 1
         And the field "objects.0.id" should be "network:JDR:1"
         And the field "objects.0.impacts" should have a size of 1
-
 
 #
 #               |                                                                20-01-2014                  30-01-2014
@@ -339,14 +331,10 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2014-01-08T23:52:12Z&end_date=2014-01-09T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "objects" should have a size of 0
-
 
 #
 #               |                                                                20-01-2014                  30-01-2014
@@ -408,16 +396,12 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2014-01-11T23:52:12Z&end_date=2014-01-13T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
         And the field "objects" should have a size of 1
         And the field "objects.0.id" should be "network:JDR:2"
         And the field "objects.0.impacts" should have a size of 1
-
 
 #
 #               |                                                                20-01-2014                  30-01-2014
@@ -479,9 +463,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=stop_area&start_date=2014-01-02T23:52:12Z&end_date=2014-01-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -490,7 +471,6 @@ Feature: list impacts by application periods
         And the field "objects.0.impacts" should have a size of 1
         And the field "objects.1.id" should be "stop_area:JDR:SA:AGNET"
         And the field "objects.1.impacts" should have a size of 1
-
 
 #
 #               |                                                                20-01-2014                  30-01-2014
@@ -552,9 +532,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=stop_area&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -620,9 +597,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b6 |
             | 2ffab232-3d48-4eea-aa2c-22f8680230b6       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2013-12-02T23:52:12Z&end_date=2014-01-12T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"
@@ -685,9 +659,6 @@ Feature: list impacts by application periods
             | 1ffab232-3d48-4eea-aa2c-22f8680230b2       | 7ffab232-3d47-4eea-aa2c-22f8680230b2 |
             | 1ffab232-3d48-4eea-aa2c-22f8680230b3       | 7ffab232-3d47-4eea-aa2c-22f8680230b3 |
 
-        I fill in header "X-Contributors" with "contrib1"
-        I fill in header "X-Coverage" with "jdr"
-        I fill in header "Authorization" with "d5b0148c-36f4-443c-9818-1f2f74a00be0"
         When I get "/impacts?pt_object_type=network&start_date=2013-12-02T23:52:12Z&end_date=2014-05-21T23:52:12Z"
         Then the status code should be "200"
         And the header "Content-Type" should be "application/json"

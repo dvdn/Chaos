@@ -112,6 +112,11 @@ def i_clean_header(step):
     if hasattr(world, 'headers'):
         world.headers = {'content-type': 'application/json'}
 
+@step('I remove header "(.*?)"')
+def i_remove_header_group1(step, field_name):
+    if hasattr(world, 'headers'):
+        world.headers.pop(field_name, None)
+
 
 @step(u'Then the status code should be "(\d+)"')
 def then_the_status_code_should_be(step, status_code):
